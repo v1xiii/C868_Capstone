@@ -1,4 +1,4 @@
-package c868_lee_scholl;
+package C868_Capstone;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -10,7 +10,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("../view_controller/LoginScreen.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("../resources/LoginScreen.fxml"));
         primaryStage.setTitle("Scheduler Login");
         primaryStage.setScene(new Scene(root, 550, 500));
         primaryStage.show();

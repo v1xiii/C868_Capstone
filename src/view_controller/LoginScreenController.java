@@ -24,7 +24,6 @@ import java.sql.SQLException;
 import java.time.Instant;
 import java.util.Collections;
 import java.util.Date;
-import java.util.Locale;
 import java.util.ResourceBundle;
 
 import static model.DBController.checkLogin;
@@ -41,15 +40,7 @@ public class LoginScreenController implements Initializable {
     @FXML
     private TextField input_username, input_password;
 
-    public void initialize(URL url, ResourceBundle rb) { // strings "empty" and "incorrect are the other choices
-        rb = ResourceBundle.getBundle("Resources/Login", Locale.getDefault());
-        label_username.setText(rb.getString("username"));
-        label_password.setText(rb.getString("password"));
-        label_login.setText(rb.getString("log_in"));
-        button_login.setText(rb.getString("log_in"));
-        //System.out.println(Locale.getDefault());
-        //System.out.println(rb.getString("intro"));
-    }
+    public void initialize(URL url, ResourceBundle rb) {}
 
     public static void setCurrUser(String userName) {
         currUser = userName;
@@ -74,18 +65,18 @@ public class LoginScreenController implements Initializable {
         Integer emptyThrown = 0;
         currUserId = -1;
 
-        ResourceBundle rb = ResourceBundle.getBundle("Resources/Login", Locale.getDefault());
         try {
             if (username.equals("") || password.equals("")) {
                 throw new IllegalArgumentException();
             } else {
-                //setCurrUserId(checkLogin(username, password));
+                setCurrUserId(checkLogin(username, password));
             }
         } catch (IllegalArgumentException iae){
             Alert emptyFields = new Alert(Alert.AlertType.WARNING);
-            emptyFields.setTitle(rb.getString("warning"));
-            emptyFields.setHeaderText(rb.getString("empty_header"));
-            emptyFields.setContentText(rb.getString("empty_content"));
+
+            emptyFields.setTitle("Warning");
+            emptyFields.setHeaderText("Username and password are required");
+            emptyFields.setContentText("Please complete both fields.");
             emptyFields.showAndWait();
             emptyThrown = 1;
         }
@@ -93,18 +84,19 @@ public class LoginScreenController implements Initializable {
         if (currUserId > -1){
             Path path = Paths.get("logins.txt");
             Files.write(path, Collections.singletonList("User:" + currUser + " -- Login Time: " + Date.from(Instant.now()).toString() + "."), StandardCharsets.UTF_8, Files.exists(path) ? StandardOpenOption.APPEND : StandardOpenOption.CREATE);
-            Parent root = FXMLLoader.load(getClass().getResource("MainScreen.fxml"));
+
+            Parent root = FXMLLoader.load(getClass().getResource("../resources/MainScreen.fxml"));
             Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
-            stage.setTitle("Scheduler Main Screen");
+            stage.setTitle("SODA Main Screen");
             stage.setScene(new Scene(root, 550, 700));
             stage.centerOnScreen();
             stage.show();
 
         } else if (emptyThrown.equals(0)) {
             Alert emptyFields = new Alert(Alert.AlertType.WARNING);
-            emptyFields.setTitle(rb.getString("warning"));
-            emptyFields.setHeaderText(rb.getString("invalid_header"));
-            emptyFields.setContentText(rb.getString("invalid_content"));
+            emptyFields.setTitle("Warning");
+            emptyFields.setHeaderText("Invalid credentials.");
+            emptyFields.setContentText("Please check your credentials and try again.");
             emptyFields.showAndWait();
         }
     }

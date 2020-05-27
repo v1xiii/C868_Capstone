@@ -12,9 +12,8 @@ import java.time.ZonedDateTime;
 
 public class DBController {
 
-    //private static final String DB_DRIVER = "com.mysql.jdbc.Driver";
     private static final String DB_NAME = "0mchleUkAZ";
-    private static final String DB_URL = "jdbc:mysql://remotemysql.com/" + DB_NAME;
+    private static final String DB_URL = "jdbc:mysql://remotemysql.com/"+ DB_NAME +"?autoReconnect=true&useSSL=false";
     private static final String DB_USER = "0mchleUkAZ";
     private static final String DB_PASS = "5T6BxHUEux";
 
