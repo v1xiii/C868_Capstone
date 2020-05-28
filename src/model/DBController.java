@@ -1,14 +1,8 @@
 package model;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.scene.control.Alert;
 import view_controller.LoginScreenController;
 
 import java.sql.*;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 
 public class DBController {
 
@@ -43,138 +37,24 @@ public class DBController {
         }
     }
 
-//    public static void addCustomer(Customer customer) throws SQLException {
-//        System.out.println("Process started...");
-//        System.out.println("addCountry up next... three remaining");
-//
-//        Integer countryID = addCountry(customer.getCountry());
-//        System.out.println("addCountry() returns "+countryID);
-//
-//        System.out.println("addCity up next... two remaining");
-//
-//        Integer cityID = addCity(customer.getCity(), countryID);
-//        System.out.println("addCity() returns "+cityID);
-//
-//        System.out.println("addAddress up next... one remaining");
-//
-//        Integer addressID = addAddress(customer.getAddress1(), customer.getAddress2(), cityID, customer.getPostalCode(), customer.getPhone());
-//        System.out.println("addAddress() returns "+addressID);
-//
-//        System.out.println("**Customer added**");
-//
-//        Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
-//        PreparedStatement ps = conn.prepareStatement("INSERT INTO customer (customerName, addressId, active, createDate, createdBy, lastUpdate, lastUpdateBy) VALUES (?, ?, 1, UTC_TIMESTAMP(), ?, UTC_TIMESTAMP(), ?)");
-//        ps.setString(1, customer.getCustomerName());
-//        ps.setInt(2, addressID);
-//        ps.setString(3, LoginScreenController.getCurrUser());
-//        ps.setString(4, LoginScreenController.getCurrUser());
-//        ps.executeUpdate();
-//    }
-
-    private static Integer addCountry(String country) throws SQLException {
-        Integer countryID = null;
-
+    public static void addSurvey(Survey survey) throws SQLException {
         Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
-        PreparedStatement ps = conn.prepareStatement("SELECT countryId FROM country WHERE country = ?");
-        ps.setString(1, country);
-        ResultSet currID = ps.executeQuery();
-
-        if (currID.next()){ // if there is already a matching country
-            countryID = currID.getInt(1);
-            currID.close();
-            return countryID; // return the ID
-        } else { // else add a new country
-            currID.close();
-            PreparedStatement ps2 = conn.prepareStatement("INSERT INTO country (country, createDate, createdBy, lastUpdate, lastUpdateBy) VALUES (?, UTC_TIMESTAMP(), ?, UTC_TIMESTAMP(), ?)", Statement.RETURN_GENERATED_KEYS);
-            ps2.setString(1, country);
-            ps2.setString(2, LoginScreenController.getCurrUser());
-            ps2.setString(3, LoginScreenController.getCurrUser());
-            ps2.executeUpdate();
-            ResultSet nextID = ps2.getGeneratedKeys(); // get the autoincrement value that was generated during the last query
-
-            if(nextID.next()){
-                countryID = nextID.getInt(1);
-                nextID.close();
-            }
-        }
-        return countryID; // and return that as the id
+        PreparedStatement ps = conn.prepareStatement("INSERT INTO survey (title, description, location, createDate, createdBy, lastUpdate, lastUpdateBy) VALUES (?, ?, ?, UTC_TIMESTAMP(), ?, UTC_TIMESTAMP(), ?)");
+        ps.setString(1, survey.getTitle());
+        ps.setString(2, survey.getDescription());
+        ps.setString(3, survey.getLocation());
+        ps.setInt(4, LoginScreenController.getCurrUserId());
+        ps.setInt(5, LoginScreenController.getCurrUserId());
+        ps.executeUpdate();
     }
 
-    private static Integer addCity(String city, Integer countryID) throws SQLException {
-        Integer cityID = null;
-
-        Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
-        PreparedStatement ps = conn.prepareStatement("SELECT cityId FROM city WHERE city = ? AND countryId = ?");
-        ps.setString(1, city);
-        ps.setInt(2, countryID);
-        ResultSet currID = ps.executeQuery();
-
-        if (currID.next()){ // if there is already a matching city
-            cityID = currID.getInt(1);
-            currID.close();
-            return cityID; // return the ID
-        } else { // else add a new city
-            currID.close();
-            PreparedStatement ps2 = conn.prepareStatement("INSERT INTO city (city, countryId, createDate, createdBy, lastUpdate, lastUpdateBy) VALUES (?, ?, UTC_TIMESTAMP(), ?, UTC_TIMESTAMP(), ?)", Statement.RETURN_GENERATED_KEYS);
-            ps2.setString(1, city);
-            ps2.setInt(2, countryID);
-            ps2.setString(3, LoginScreenController.getCurrUser());
-            ps2.setString(4, LoginScreenController.getCurrUser());
-            ps2.executeUpdate();
-            ResultSet nextID = ps2.getGeneratedKeys(); // get the autoincrement value that was generated during the last query
-
-            if(nextID.next()){
-                cityID = nextID.getInt(1);
-                nextID.close();
-            }
-        }
-        return cityID; // and return that as the id
-    }
-
-    private static Integer addAddress(String address1, String address2, Integer cityID, String postalCode, String phone) throws SQLException {
-        Integer addressID = null;
-
-        Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
-        PreparedStatement ps = conn.prepareStatement("SELECT addressId FROM address WHERE address = ? AND address2 = ? AND cityId = ? AND postalCode = ? AND phone = ?");
-        ps.setString(1, address1);
-        ps.setString(2, address2);
-        ps.setInt(3, cityID);
-        ps.setString(4, postalCode);
-        ps.setString(5, phone);
-        ResultSet currID = ps.executeQuery();
-
-        if (currID.next()){ // if there is already a matching address
-            addressID = currID.getInt(1);
-            currID.close();
-            return addressID; // return the ID
-        } else { // else add a new address
-            currID.close();
-            PreparedStatement ps2 = conn.prepareStatement("INSERT INTO address (address, address2, cityID, postalCode, phone, createDate, createdBy, lastUpdate, lastUpdateBy) VALUES (?, ?, ?, ?, ?, UTC_TIMESTAMP(), ?, UTC_TIMESTAMP(), ?)", Statement.RETURN_GENERATED_KEYS);
-            ps2.setString(1, address1);
-            ps2.setString(2, address2);
-            ps2.setInt(3, cityID);
-            ps2.setString(4, postalCode);
-            ps2.setString(5, phone);
-            ps2.setString(6, LoginScreenController.getCurrUser());
-            ps2.setString(7, LoginScreenController.getCurrUser());
-            ps2.executeUpdate();
-            ResultSet nextID = ps2.getGeneratedKeys(); // get the autoincrement value that was generated during the last query
-
-            if(nextID.next()){
-                addressID = nextID.getInt(1);
-                nextID.close();
-            }
-        }
-        return addressID; // and return that as the id
-    }
-
-//    public static ObservableList<Customer> getCustomers() throws SQLException {
-//        ObservableList<Customer> allCustomers = FXCollections.observableArrayList();
+//    public static ObservableList<Survey> getSurveys() throws SQLException {
+//        ObservableList<Survey> allSurveys = FXCollections.observableArrayList();
 //
 //        Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
 //        PreparedStatement ps = conn.prepareStatement("" +
-//                "SELECT cu.customerId, cu.customerName, a.address, a.address2, ci.city, co.country, a.postalCode, a.phone, cu.active, a.addressId " +
-//                "FROM customer cu " +
+//                "SELECT cu.surveyId, cu.title, a.address, a.address2, ci.city, co.country, a.postalCode, a.phone, cu.active, a.addressId " +
+//                "FROM survey cu " +
 //                "LEFT JOIN address a ON cu.addressId = a.addressId " +
 //                "LEFT JOIN city ci ON a.cityId = ci.cityId " +
 //                "LEFT JOIN country co ON ci.countryId = co.countryId;"
@@ -183,87 +63,87 @@ public class DBController {
 //        ResultSet rs = ps.executeQuery();
 //
 //        while (rs.next()) {
-//            Customer customer = new Customer();
-//            customer.setCustomerId(rs.getInt(1));
-//            customer.setCustomerName(rs.getString(2));
-//            customer.setAddress1(rs.getString(3));
-//            customer.setAddress2(rs.getString(4));
-//            customer.setCity(rs.getString(5));
-//            customer.setCountry(rs.getString(6));
-//            customer.setPostalCode(rs.getString(7));
-//            customer.setPhone(rs.getString(8));
-//            customer.setActive(rs.getBoolean(9));
-//            customer.setAddressId(rs.getInt(10));
+//            Survey survey = new Survey();
+//            survey.setSurveyId(rs.getInt(1));
+//            survey.setTitle(rs.getString(2));
+//            survey.setDescription1(rs.getString(3));
+//            survey.setDescription2(rs.getString(4));
+//            survey.setCity(rs.getString(5));
+//            survey.setCountry(rs.getString(6));
+//            survey.setPostalCode(rs.getString(7));
+//            survey.setPhone(rs.getString(8));
+//            survey.setActive(rs.getBoolean(9));
+//            survey.setDescriptionId(rs.getInt(10));
 //
-//            allCustomers.add(customer);
+//            allSurveys.add(survey);
 //        }
 //        rs.close();
 //
-//        return allCustomers;
+//        return allSurveys;
 //    }
 //
-//    public static void deleteCustomer(Customer customer) throws SQLException {
+//    public static void deleteSurvey(Survey survey) throws SQLException {
 //        Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
 //
-//        PreparedStatement ps = conn.prepareStatement("DELETE FROM customer WHERE customerId = ?");
-//        ps.setInt(1, customer.getCustomerId());
+//        PreparedStatement ps = conn.prepareStatement("DELETE FROM survey WHERE surveyId = ?");
+//        ps.setInt(1, survey.getSurveyId());
 //        ps.executeUpdate();
 //
 //        /*
 //        PreparedStatement ps2 = conn.prepareStatement("DELETE FROM address WHERE addressId = ?");
-//        ps2.setInt(1, customer.getAddressId());
+//        ps2.setInt(1, survey.getAddressId());
 //        ps2.executeUpdate();
 //        */
 //    }
 //
-//    public static void updateCustomer(Customer customer) throws SQLException {
+//    public static void updateSurvey(Survey survey) throws SQLException {
 //        Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
 //
 //        System.out.println("Update started...");
 //        System.out.println("Checking country table...");
 //
-//        Integer countryId = addCountry(customer.getCountry());
+//        Integer countryId = addCountry(survey.getCountry());
 //
 //        System.out.println("addCountry() returns "+countryId);
 //        System.out.println("Checking city table...");
 //
-//        Integer cityId = addCity(customer.getCity(), countryId);
+//        Integer cityId = addCity(survey.getCity(), countryId);
 //
 //        System.out.println("addCity() returns "+cityId);
 //        System.out.println("Updating address table...");
 //
 //        PreparedStatement ps2 = conn.prepareStatement("UPDATE address SET address = ?, address2 = ?,  cityId = ?, postalCode = ?, phone = ?, lastUpdate = UTC_TIMESTAMP(), lastUpdateBy = ? WHERE addressId = ?");
-//        ps2.setString(1, customer.getAddress1());
-//        ps2.setString(2, customer.getAddress2());
+//        ps2.setString(1, survey.getAddress1());
+//        ps2.setString(2, survey.getAddress2());
 //        ps2.setInt(3, cityId);
-//        ps2.setString(4, customer.getPostalCode());
-//        ps2.setString(5, customer.getPhone());
+//        ps2.setString(4, survey.getPostalCode());
+//        ps2.setString(5, survey.getPhone());
 //        ps2.setString(6, LoginScreenController.getCurrUser());
-//        ps2.setInt(7, customer.getAddressId());
+//        ps2.setInt(7, survey.getAddressId());
 //        ps2.executeUpdate();
 //
 //        System.out.println("Address table updated");
-//        System.out.println("Updating customer table...");
+//        System.out.println("Updating survey table...");
 //
-//        PreparedStatement ps = conn.prepareStatement("UPDATE customer SET customerName = ?, lastUpdate = UTC_TIMESTAMP(), lastUpdateBy = ? WHERE customerId = ?");
-//        ps.setString(1, customer.getCustomerName());
+//        PreparedStatement ps = conn.prepareStatement("UPDATE survey SET title = ?, lastUpdate = UTC_TIMESTAMP(), lastUpdateBy = ? WHERE surveyId = ?");
+//        ps.setString(1, survey.getTitle());
 //        ps.setString(2, LoginScreenController.getCurrUser());
-//        ps.setInt(3, customer.getCustomerId());
+//        ps.setInt(3, survey.getSurveyId());
 //        ps.executeUpdate();
 //
-//        System.out.println("Customer table updated");
-//        System.out.println("**Customer update complete**");
+//        System.out.println("Survey table updated");
+//        System.out.println("**Survey update complete**");
 //    }
 //
-//    private static Boolean checkAppointmentOverlap(ZonedDateTime startZDT, ZonedDateTime endZDT) throws SQLException {
-//        ObservableList<Appointment> allAppointments = DBController.getAppointments();
+//    private static Boolean checkObservationOverlap(ZonedDateTime startZDT, ZonedDateTime endZDT) throws SQLException {
+//        ObservableList<Observation> allObservations = DBController.getObservations();
 //
 //        Timestamp startTS = Timestamp.valueOf(startZDT.toLocalDateTime());
 //        Timestamp endTS = Timestamp.valueOf(endZDT.toLocalDateTime());
 //
-//        for(Appointment appointment:allAppointments){
-//            ZonedDateTime tempStartZDT = appointment.getStart().toInstant().atZone(ZoneId.of("UTC"));
-//            ZonedDateTime tempEndZDT = appointment.getEnd().toInstant().atZone(ZoneId.of("UTC"));
+//        for(Observation observation:allObservations){
+//            ZonedDateTime tempStartZDT = observation.getStart().toInstant().atZone(ZoneId.of("UTC"));
+//            ZonedDateTime tempEndZDT = observation.getEnd().toInstant().atZone(ZoneId.of("UTC"));
 //            Timestamp thisStart = Timestamp.valueOf(tempStartZDT.toLocalDateTime());
 //            Timestamp thisEnd = Timestamp.valueOf(tempEndZDT.toLocalDateTime());
 //
@@ -284,29 +164,29 @@ public class DBController {
 //        return false;
 //    }
 //
-//    public static Integer addAppointment(Appointment appointment) throws SQLException {
+//    public static Integer addObservation(Observation observation) throws SQLException {
 //
-//        Timestamp startTS = Timestamp.valueOf(appointment.getStart().toLocalDateTime());
-//        Timestamp endTS = Timestamp.valueOf(appointment.getEnd().toLocalDateTime());
+//        Timestamp startTS = Timestamp.valueOf(observation.getStart().toLocalDateTime());
+//        Timestamp endTS = Timestamp.valueOf(observation.getEnd().toLocalDateTime());
 //
-//        if (!checkAppointmentOverlap(appointment.getStart(), appointment.getEnd())) {
-//            System.out.println(checkAppointmentOverlap(appointment.getStart(), appointment.getEnd()));
+//        if (!checkObservationOverlap(observation.getStart(), observation.getEnd())) {
+//            System.out.println(checkObservationOverlap(observation.getStart(), observation.getEnd()));
 //            Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
 //            PreparedStatement ps = conn.prepareStatement("" +
-//                    "INSERT INTO appointment (" +
-//                    "customerId, userId, title, description, location, contact, type, url, start, end, createDate, createdBy, lastUpdate, lastUpdateBy" +
+//                    "INSERT INTO observation (" +
+//                    "surveyId, userId, title, description, location, contact, type, url, start, end, createDate, createdBy, lastUpdate, lastUpdateBy" +
 //                    ") " +
 //                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, UTC_TIMESTAMP(), ?, UTC_TIMESTAMP(), ?)" // wow, there must be a better way to do these prepared statements...
 //            );
 //
-//            ps.setInt(1, appointment.getCustomerId());
-//            ps.setInt(2, appointment.getUserId());
-//            ps.setString(3, appointment.getTitle());
-//            ps.setString(4, appointment.getDescription());
-//            ps.setString(5, appointment.getLocation());
-//            ps.setString(6, appointment.getContact());
-//            ps.setString(7, appointment.getType());
-//            ps.setString(8, appointment.getUrl());
+//            ps.setInt(1, observation.getSurveyId());
+//            ps.setInt(2, observation.getUserId());
+//            ps.setString(3, observation.getTitle());
+//            ps.setString(4, observation.getDescription());
+//            ps.setString(5, observation.getLocation());
+//            ps.setString(6, observation.getContact());
+//            ps.setString(7, observation.getType());
+//            ps.setString(8, observation.getUrl());
 //            ps.setTimestamp(9, startTS);
 //            ps.setTimestamp(10, endTS);
 //            ps.setString(11, LoginScreenController.getCurrUser());
@@ -315,35 +195,35 @@ public class DBController {
 //
 //            return 1;
 //        } else {
-//            System.out.println("Overlapping appointment");
+//            System.out.println("Overlapping observation");
 //            Alert emptyFields = new Alert(Alert.AlertType.ERROR);
 //            emptyFields.setTitle("Error");
-//            emptyFields.setHeaderText("Overlapping Appointment");
-//            emptyFields.setContentText("Please check the appointment list and try again.");
+//            emptyFields.setHeaderText("Overlapping Observation");
+//            emptyFields.setContentText("Please check the observation list and try again.");
 //            emptyFields.showAndWait();
 //        }
 //        return 0;
 //    }
 //
-//    public static ObservableList<Appointment> getAppointments() throws SQLException {
-//        ObservableList<Appointment> allAppointments = FXCollections.observableArrayList();
+//    public static ObservableList<Observation> getObservations() throws SQLException {
+//        ObservableList<Observation> allObservations = FXCollections.observableArrayList();
 //
 //        Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
-//        PreparedStatement ps = conn.prepareStatement("SELECT * FROM appointment ORDER BY start");
+//        PreparedStatement ps = conn.prepareStatement("SELECT * FROM observation ORDER BY start");
 //
 //        ResultSet rs = ps.executeQuery();
 //
 //        while (rs.next()) {
-//            Appointment appointment = new Appointment();
-//            appointment.setAppointmentId(Integer.parseInt(rs.getString(1)));
-//            appointment.setCustomerId(Integer.parseInt(rs.getString(2)));
-//            appointment.setUserId(Integer.parseInt(rs.getString(3)));
-//            appointment.setTitle(rs.getString(4));
-//            appointment.setDescription(rs.getString(5));
-//            appointment.setLocation(rs.getString(6));
-//            appointment.setContact(rs.getString(7));
-//            appointment.setType(rs.getString(8));
-//            appointment.setUrl(rs.getString(9));
+//            Observation observation = new Observation();
+//            observation.setObservationId(Integer.parseInt(rs.getString(1)));
+//            observation.setSurveyId(Integer.parseInt(rs.getString(2)));
+//            observation.setUserId(Integer.parseInt(rs.getString(3)));
+//            observation.setTitle(rs.getString(4));
+//            observation.setDescription(rs.getString(5));
+//            observation.setLocation(rs.getString(6));
+//            observation.setContact(rs.getString(7));
+//            observation.setType(rs.getString(8));
+//            observation.setUrl(rs.getString(9));
 //
 //            Timestamp startTS = rs.getTimestamp(10);
 //            LocalDateTime startLDT = startTS.toLocalDateTime();
@@ -355,64 +235,64 @@ public class DBController {
 //            ZonedDateTime endUTC = endLDT.atZone(ZoneId.of("UTC"));
 //            ZonedDateTime endZDT = endUTC.withZoneSameInstant(ZoneId.systemDefault());
 //
-//            appointment.setStart(startZDT);
-//            appointment.setEnd(endZDT);
+//            observation.setStart(startZDT);
+//            observation.setEnd(endZDT);
 //
-//            allAppointments.add(appointment);
+//            allObservations.add(observation);
 //        }
 //        rs.close();
 //
-//        return allAppointments;
+//        return allObservations;
 //    }
 //
-//    public static int updateAppointment(Appointment appointment) throws SQLException {
-//        Timestamp startTS = Timestamp.valueOf(appointment.getStart().toLocalDateTime());
-//        Timestamp endTS = Timestamp.valueOf(appointment.getEnd().toLocalDateTime());
+//    public static int updateObservation(Observation observation) throws SQLException {
+//        Timestamp startTS = Timestamp.valueOf(observation.getStart().toLocalDateTime());
+//        Timestamp endTS = Timestamp.valueOf(observation.getEnd().toLocalDateTime());
 //
-//        if (!checkAppointmentOverlap(appointment.getStart(), appointment.getEnd())) {
-//            System.out.println(checkAppointmentOverlap(appointment.getStart(), appointment.getEnd()));
+//        if (!checkObservationOverlap(observation.getStart(), observation.getEnd())) {
+//            System.out.println(checkObservationOverlap(observation.getStart(), observation.getEnd()));
 //            Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
-//            PreparedStatement ps = conn.prepareStatement("UPDATE appointment SET customerId = ?, UserId = ?, title = ?, description = ?, location = ?, contact = ?, type = ?, url = ?, start = ?, end = ?, lastUpdate = UTC_TIMESTAMP(), lastUpdateBy = ? WHERE appointmentId = ?");
-//            ps.setInt(1, appointment.getCustomerId());
-//            ps.setInt(2, appointment.getUserId());
-//            ps.setString(3, appointment.getTitle());
-//            ps.setString(4, appointment.getDescription());
-//            ps.setString(5, appointment.getLocation());
-//            ps.setString(6, appointment.getContact());
-//            ps.setString(7, appointment.getType());
-//            ps.setString(8, appointment.getUrl());
+//            PreparedStatement ps = conn.prepareStatement("UPDATE observation SET surveyId = ?, UserId = ?, title = ?, description = ?, location = ?, contact = ?, type = ?, url = ?, start = ?, end = ?, lastUpdate = UTC_TIMESTAMP(), lastUpdateBy = ? WHERE observationId = ?");
+//            ps.setInt(1, observation.getSurveyId());
+//            ps.setInt(2, observation.getUserId());
+//            ps.setString(3, observation.getTitle());
+//            ps.setString(4, observation.getDescription());
+//            ps.setString(5, observation.getLocation());
+//            ps.setString(6, observation.getContact());
+//            ps.setString(7, observation.getType());
+//            ps.setString(8, observation.getUrl());
 //            ps.setTimestamp(9, startTS);
 //            ps.setTimestamp(10, endTS);
 //            ps.setString(11, LoginScreenController.getCurrUser());
-//            ps.setInt(12, appointment.getAppointmentId());
+//            ps.setInt(12, observation.getObservationId());
 //            ps.executeUpdate();
 //
-//            System.out.println("**Appointment update complete**");
+//            System.out.println("**Observation update complete**");
 //
 //            return 1;
 //        } else {
-//            System.out.println("Overlapping appointment");
+//            System.out.println("Overlapping observation");
 //            Alert emptyFields = new Alert(Alert.AlertType.ERROR);
 //            emptyFields.setTitle("Error");
-//            emptyFields.setHeaderText("Overlapping Appointment");
-//            emptyFields.setContentText("Please check the appointment list and try again.");
+//            emptyFields.setHeaderText("Overlapping Observation");
+//            emptyFields.setContentText("Please check the observation list and try again.");
 //            emptyFields.showAndWait();
 //        }
 //        return 0;
 //    }
 //
-//    public static void deleteAppointment(Appointment appointment) throws SQLException {
+//    public static void deleteObservation(Observation observation) throws SQLException {
 //        Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
-//        PreparedStatement ps = conn.prepareStatement("DELETE FROM appointment WHERE appointmentId = ?");
-//        ps.setInt(1, appointment.getAppointmentId());
+//        PreparedStatement ps = conn.prepareStatement("DELETE FROM observation WHERE observationId = ?");
+//        ps.setInt(1, observation.getObservationId());
 //        ps.executeUpdate();
 //    }
 //
-//    public static ObservableList<ReportItem> getAppointmentsByType() throws SQLException {
-//        ObservableList<ReportItem> allAppointments = FXCollections.observableArrayList();
+//    public static ObservableList<ReportItem> getObservationsByType() throws SQLException {
+//        ObservableList<ReportItem> allObservations = FXCollections.observableArrayList();
 //
 //        Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
-//        PreparedStatement ps = conn.prepareStatement("SELECT MONTHNAME(start) AS 'month', type, COUNT(*) AS 'quantity' FROM appointment GROUP BY type, MONTH(start)");
+//        PreparedStatement ps = conn.prepareStatement("SELECT MONTHNAME(start) AS 'month', type, COUNT(*) AS 'quantity' FROM observation GROUP BY type, MONTH(start)");
 //
 //        ResultSet rs = ps.executeQuery();
 //
@@ -423,18 +303,18 @@ public class DBController {
 //            item.setType(rs.getString(2));
 //            item.setQuantity(Integer.parseInt(rs.getString(3)));
 //
-//            allAppointments.add(item);
+//            allObservations.add(item);
 //        }
 //        rs.close();
 //
-//        return allAppointments;
+//        return allObservations;
 //    }
 //
 //    public static ObservableList<ReportItem> getConsultantSchedules() throws SQLException {
 //        ObservableList<ReportItem> consultantSchedules = FXCollections.observableArrayList();
 //
 //        Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
-//        PreparedStatement ps = conn.prepareStatement("SELECT user.userName AS 'consultant', customer.customerName AS 'customer', appointment.type, appointment.start FROM customer JOIN appointment ON customer.customerId = appointment.customerId JOIN user ON appointment.userId = user.userId ORDER BY user.userId, appointment.start");
+//        PreparedStatement ps = conn.prepareStatement("SELECT user.userName AS 'consultant', survey.title AS 'survey', observation.type, observation.start FROM survey JOIN observation ON survey.surveyId = observation.surveyId JOIN user ON observation.userId = user.userId ORDER BY user.userId, observation.start");
 //
 //        ResultSet rs = ps.executeQuery();
 //
@@ -442,7 +322,7 @@ public class DBController {
 //            ReportItem item = new ReportItem();
 //
 //            item.setUserName(rs.getString(1));
-//            item.setCustomerName(rs.getString(2));
+//            item.setTitle(rs.getString(2));
 //            item.setType(rs.getString(3));
 //
 //            Timestamp startTS = rs.getTimestamp(4);
@@ -459,11 +339,11 @@ public class DBController {
 //        return consultantSchedules;
 //    }
 //
-//    public static ObservableList<ReportItem> getCustomersPerCity() throws SQLException {
-//        ObservableList<ReportItem> customersPerCity = FXCollections.observableArrayList();
+//    public static ObservableList<ReportItem> getSurveysPerCity() throws SQLException {
+//        ObservableList<ReportItem> surveysPerCity = FXCollections.observableArrayList();
 //
 //        Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
-//        PreparedStatement ps = conn.prepareStatement("SELECT ci.city, co.country, COUNT(DISTINCT cu.customerName) AS customerCount FROM country co JOIN city ci ON co.countryId = ci.countryId LEFT JOIN address a ON ci.cityId = a.cityId LEFT JOIN customer cu ON a.addressId = cu.addressId GROUP BY city");
+//        PreparedStatement ps = conn.prepareStatement("SELECT ci.city, co.country, COUNT(DISTINCT cu.title) AS surveyCount FROM country co JOIN city ci ON co.countryId = ci.countryId LEFT JOIN address a ON ci.cityId = a.cityId LEFT JOIN survey cu ON a.addressId = cu.addressId GROUP BY city");
 //
 //        ResultSet rs = ps.executeQuery();
 //
@@ -474,15 +354,15 @@ public class DBController {
 //            item.setCountry(rs.getString(2));
 //            item.setQuantity(Integer.parseInt(rs.getString(3)));
 //
-//            customersPerCity.add(item);
+//            surveysPerCity.add(item);
 //        }
 //        rs.close();
 //
-//        return customersPerCity;
+//        return surveysPerCity;
 //    }
 //
-//    public static Appointment checkUpcomingAppointments() throws SQLException {
-//        Appointment appointment = new Appointment();
+//    public static Observation checkUpcomingObservations() throws SQLException {
+//        Observation observation = new Observation();
 //        Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
 //
 //        LocalDateTime nowLDT = LocalDateTime.now();
@@ -490,7 +370,7 @@ public class DBController {
 //        LocalDateTime startLDT = nowZDT.withZoneSameInstant(ZoneId.of("UTC")).toLocalDateTime();
 //        LocalDateTime startLDT15 = startLDT.plusMinutes(15);
 //
-//        PreparedStatement ps = conn.prepareStatement("SELECT * FROM appointment WHERE userId = ? AND (start BETWEEN ? AND ?) ORDER BY start LIMIT 1");
+//        PreparedStatement ps = conn.prepareStatement("SELECT * FROM observation WHERE userId = ? AND (start BETWEEN ? AND ?) ORDER BY start LIMIT 1");
 //        ps.setInt(1, LoginScreenController.getCurrUserId());
 //        ps.setString(2, String.valueOf(startLDT));
 //        ps.setString(3, String.valueOf(startLDT15));
@@ -498,15 +378,15 @@ public class DBController {
 //        ResultSet rs = ps.executeQuery();
 //
 //        while (rs.next()) {
-//            appointment.setAppointmentId(Integer.parseInt(rs.getString(1)));
-//            appointment.setCustomerId(Integer.parseInt(rs.getString(2)));
-//            appointment.setUserId(Integer.parseInt(rs.getString(3)));
-//            appointment.setTitle(rs.getString(4));
-//            appointment.setDescription(rs.getString(5));
-//            appointment.setLocation(rs.getString(6));
-//            appointment.setContact(rs.getString(7));
-//            appointment.setType(rs.getString(8));
-//            appointment.setUrl(rs.getString(9));
+//            observation.setObservationId(Integer.parseInt(rs.getString(1)));
+//            observation.setSurveyId(Integer.parseInt(rs.getString(2)));
+//            observation.setUserId(Integer.parseInt(rs.getString(3)));
+//            observation.setTitle(rs.getString(4));
+//            observation.setDescription(rs.getString(5));
+//            observation.setLocation(rs.getString(6));
+//            observation.setContact(rs.getString(7));
+//            observation.setType(rs.getString(8));
+//            observation.setUrl(rs.getString(9));
 //
 //            Timestamp startTS = rs.getTimestamp(10);
 //            LocalDateTime startLDT2 = startTS.toLocalDateTime();
@@ -518,12 +398,12 @@ public class DBController {
 //            ZonedDateTime endUTC = endLDT.atZone(ZoneId.of("UTC"));
 //            ZonedDateTime endZDT = endUTC.withZoneSameInstant(ZoneId.systemDefault());
 //
-//            appointment.setStart(startZDT);
-//            appointment.setEnd(endZDT);
+//            observation.setStart(startZDT);
+//            observation.setEnd(endZDT);
 //        }
 //
 //        rs.close();
 //
-//        return appointment;
+//        return observation;
 //    }
 }

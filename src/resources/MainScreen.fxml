@@ -1,14 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.text.Font?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<GridPane alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="550.0" style="-fx-background-color: #bfcbe0;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view_controller.MainScreenController">
+<GridPane alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="550.0" style="-fx-background-color: #bfcbe0;" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view_controller.MainScreenController">
     <columnConstraints>
         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -20,7 +17,7 @@
         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
     </rowConstraints>
-    <Label style="-fx-background-color: #ccd2db; -fx-border-style: solid;" text="Scheduler Dashboard" GridPane.columnSpan="2147483647" GridPane.halignment="CENTER">
+    <Label style="-fx-background-color: #ccd2db; -fx-border-style: solid;" text="SODA Dashboard" GridPane.columnSpan="2147483647" GridPane.halignment="CENTER">
         <font>
           <Font name="System Bold" size="24.0" />
         </font>
@@ -49,13 +46,13 @@
         <GridPane.margin>
             <Insets bottom="10.0" left="20.0" right="20.0" top="10.0" />
         </GridPane.margin>
-        <Label text="Appointments" GridPane.columnSpan="2147483647" GridPane.halignment="CENTER">
+        <Label text="Observations" GridPane.columnSpan="2147483647" GridPane.halignment="CENTER">
             <font>
                 <Font name="System Bold" size="18.0" />
             </font>
         </Label>
-        <Button fx:id="button_add_appointment" mnemonicParsing="false" onAction="#addAppointmentButtonHandler" prefWidth="200.0" text="Add New Appointment" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
-        <Button fx:id="button_edit_appointment" mnemonicParsing="false" onAction="#viewAppointmentButtonHandler" prefWidth="200.0" text="View/Edit Appointments" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+        <Button fx:id="button_add_observation" mnemonicParsing="false" onAction="#addObservationButtonHandler" prefWidth="200.0" text="Add New Observation" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+        <Button fx:id="button_edit_observation" mnemonicParsing="false" onAction="#viewObservationButtonHandler" prefWidth="200.0" text="View/Edit Observations" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
     </GridPane>
     <GridPane style="-fx-background-color: #ccd2db;" GridPane.columnSpan="2147483647" GridPane.rowIndex="1">
         <columnConstraints>
@@ -70,13 +67,13 @@
         <GridPane.margin>
             <Insets bottom="10.0" left="20.0" right="20.0" top="10.0" />
         </GridPane.margin>
-        <Label text="Customers" GridPane.columnSpan="2147483647" GridPane.halignment="CENTER">
+        <Label text="Surveys" GridPane.columnSpan="2147483647" GridPane.halignment="CENTER">
             <font>
                 <Font name="System Bold" size="18.0" />
             </font>
         </Label>
-        <Button fx:id="button_add_customer" mnemonicParsing="false" prefWidth="200.0" text="Add Customer" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
-        <Button fx:id="button_edit_customer" mnemonicParsing="false" onAction="#editCustomerButtonHandler" prefWidth="200.0" text="Edit Customer" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+        <Button fx:id="button_add_survey" mnemonicParsing="false" onAction="#addSurveyButtonHandler" prefWidth="200.0" text="Add Survey" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+        <Button fx:id="button_edit_survey" mnemonicParsing="false" onAction="#editSurveyButtonHandler" prefWidth="200.0" text="Edit Survey" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
     </GridPane>
     <GridPane style="-fx-background-color: #ccd2db;" GridPane.columnSpan="2147483647" GridPane.rowIndex="3">
         <columnConstraints>
@@ -96,8 +93,8 @@
                 <Font name="System Bold" size="18.0" />
             </font>
         </Label>
-        <Button mnemonicParsing="false" onAction="#reportAppointmentTypesButtonHandler" prefWidth="200.0" text="Appointment Types" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+        <Button mnemonicParsing="false" onAction="#reportObservationTypesButtonHandler" prefWidth="200.0" text="Observation Types" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
         <Button mnemonicParsing="false" onAction="#reportConsultantScheduleButtonHandler" prefWidth="200.0" text="Consultant Schedules" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
-        <Button mnemonicParsing="false" onAction="#reportCustomersPerCityButtonHandler" prefWidth="200.0" text="Customers Per City" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+        <Button mnemonicParsing="false" onAction="#reportSurveysPerCityButtonHandler" prefWidth="200.0" text="Customers Per City" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
     </GridPane>
 </GridPane>

@@ -63,23 +63,25 @@ public class LoginScreenController implements Initializable {
         String username = input_username.getText();
         String password = input_password.getText();
         Integer emptyThrown = 0;
-        currUserId = -1;
+        //currUserId = -1;
+        currUserId = 1; // TODO: delete this and the next line when complete
+        setCurrUserId(checkLogin("test", "test"));
 
-        try {
-            if (username.equals("") || password.equals("")) {
-                throw new IllegalArgumentException();
-            } else {
-                setCurrUserId(checkLogin(username, password));
-            }
-        } catch (IllegalArgumentException iae){
-            Alert emptyFields = new Alert(Alert.AlertType.WARNING);
-
-            emptyFields.setTitle("Warning");
-            emptyFields.setHeaderText("Username and password are required");
-            emptyFields.setContentText("Please complete both fields.");
-            emptyFields.showAndWait();
-            emptyThrown = 1;
-        }
+//        try {
+//            if (username.equals("") || password.equals("")) {
+//                throw new IllegalArgumentException();
+//            } else {
+//                setCurrUserId(checkLogin(username, password));
+//            }
+//        } catch (IllegalArgumentException iae){
+//            Alert emptyFields = new Alert(Alert.AlertType.WARNING);
+//
+//            emptyFields.setTitle("Warning");
+//            emptyFields.setHeaderText("Username and password are required");
+//            emptyFields.setContentText("Please complete both fields.");
+//            emptyFields.showAndWait();
+//            emptyThrown = 1;
+//        }
 
         if (currUserId > -1){
             Path path = Paths.get("logins.txt");

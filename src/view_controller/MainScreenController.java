@@ -9,7 +9,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-//import model.Appointment;
+//import model.Observation;
 
 import java.io.IOException;
 import java.net.URL;
@@ -17,12 +17,12 @@ import java.util.ResourceBundle;
 
 public class MainScreenController implements Initializable {
 
-    public Button button_add_appointment;
-    public Button button_edit_appointment;
-    public Button button_edit_customer;
+    public Button button_add_observation;
+    public Button button_edit_observation;
+    public Button button_edit_survey;
 
     @FXML private Button button_logout;
-    @FXML private Button button_add_customer;
+    @FXML private Button button_add_survey;
 
     public void initialize(URL url, ResourceBundle rb) {
 
@@ -50,85 +50,85 @@ public class MainScreenController implements Initializable {
             }
         });
 
-        button_add_customer.setOnAction(event -> { // this lambda simply sets an OnAction event TO a specific function rather than "being" the function
-            try {
-                addCustomerButtonHandler();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
+//        button_add_survey.setOnAction(event -> { // this lambda simply sets an OnAction event TO a specific function rather than "being" the function
+//            try {
+//                addSurveyButtonHandler();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        });
 
-//        Appointment upcomingAppointment = null;
-//        try { // check for appointment within the next 15 minutes
-//            upcomingAppointment = DBController.checkUpcomingAppointments();
+//        Observation upcomingObservation = null;
+//        try { // check for observation within the next 15 minutes
+//            upcomingObservation = DBController.checkUpcomingObservations();
 //            System.out.println(ZonedDateTime.now());
-//            System.out.println(upcomingAppointment.getTitle());
+//            System.out.println(upcomingObservation.getTitle());
 //        } catch (SQLException e) {
 //            e.printStackTrace();
 //        }
 //
-//        assert upcomingAppointment != null;
-//        if (upcomingAppointment.getCustomerId() != null) {
-//            checkUpcomingAppointments(upcomingAppointment);
+//        assert upcomingObservation != null;
+//        if (upcomingObservation.getSurveyId() != null) {
+//            checkUpcomingObservations(upcomingObservation);
 //        }
     }
 
-//    private void checkUpcomingAppointments(Appointment upcomingAppointment){
+//    private void checkUpcomingObservations(Observation upcomingObservation){
 //        DateTimeFormatter formatTime = DateTimeFormatter.ofPattern("h:mm a");
-//        String start = upcomingAppointment.getStart().format(formatTime);
+//        String start = upcomingObservation.getStart().format(formatTime);
 //
 //        Alert emptyFields = new Alert(Alert.AlertType.INFORMATION);
-//        emptyFields.setTitle("Upcoming Appointment");
-//        emptyFields.setHeaderText("Appointment at " + start);
-//        emptyFields.setContentText("Type: " + upcomingAppointment.getType() + "\nContact: " + upcomingAppointment.getContact() + "\nLocation: " + upcomingAppointment.getLocation());
+//        emptyFields.setTitle("Upcoming Observation");
+//        emptyFields.setHeaderText("Observation at " + start);
+//        emptyFields.setContentText("Type: " + upcomingObservation.getType() + "\nContact: " + upcomingObservation.getContact() + "\nLocation: " + upcomingObservation.getLocation());
 //        emptyFields.showAndWait();
 //    }
 
     @FXML
-    private void addCustomerButtonHandler() throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("AddCustomer.fxml"));
+    private void addSurveyButtonHandler() throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("AddSurvey.fxml"));
         Stage stage = new Stage();
-        stage.setTitle("Add Customer");
+        stage.setTitle("Add Survey");
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.setScene(new Scene(root, 550, 500));
         stage.show();
     }
 
     @FXML
-    private void editCustomerButtonHandler() throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("EditCustomer.fxml"));
+    private void editSurveyButtonHandler() throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("EditSurvey.fxml"));
         Stage stage = new Stage();
-        stage.setTitle("Edit Customer");
+        stage.setTitle("Edit Survey");
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.setScene(new Scene(root, 700, 550));
         stage.show();
     }
 
     @FXML
-    private void addAppointmentButtonHandler() throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("AddAppointment.fxml"));
+    private void addObservationButtonHandler() throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("AddObservation.fxml"));
         Stage stage = new Stage();
-        stage.setTitle("Add Appointment");
+        stage.setTitle("Add Observation");
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.setScene(new Scene(root, 700, 550));
         stage.show();
     }
 
     @FXML
-    private void viewAppointmentButtonHandler() throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("ViewAppointment.fxml"));
+    private void viewObservationButtonHandler() throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("ViewObservation.fxml"));
         Stage stage = new Stage();
-        stage.setTitle("Appointments");
+        stage.setTitle("Observations");
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.setScene(new Scene(root, 700, 550));
         stage.show();
     }
 
     @FXML
-    private void reportAppointmentTypesButtonHandler() throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("ReportAppointmentTypes.fxml"));
+    private void reportObservationTypesButtonHandler() throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("ReportObservationTypes.fxml"));
         Stage stage = new Stage();
-        stage.setTitle("Appointment Types");
+        stage.setTitle("Observation Types");
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.setScene(new Scene(root, 550, 700));
         stage.show();
@@ -145,10 +145,10 @@ public class MainScreenController implements Initializable {
     }
 
     @FXML
-    private void reportCustomersPerCityButtonHandler() throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("ReportCustomersPerCity.fxml"));
+    private void reportSurveysPerCityButtonHandler() throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("ReportSurveysPerCity.fxml"));
         Stage stage = new Stage();
-        stage.setTitle("Customers Per City");
+        stage.setTitle("Surveys Per City");
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.setScene(new Scene(root, 550, 700));
         stage.show();
