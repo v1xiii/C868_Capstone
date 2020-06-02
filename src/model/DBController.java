@@ -1,5 +1,7 @@
 package model;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import view_controller.LoginScreenController;
 
 import java.sql.*;
@@ -48,92 +50,53 @@ public class DBController {
         ps.executeUpdate();
     }
 
-//    public static ObservableList<Survey> getSurveys() throws SQLException {
-//        ObservableList<Survey> allSurveys = FXCollections.observableArrayList();
-//
-//        Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
-//        PreparedStatement ps = conn.prepareStatement("" +
-//                "SELECT cu.surveyId, cu.title, a.address, a.address2, ci.city, co.country, a.postalCode, a.phone, cu.active, a.addressId " +
-//                "FROM survey cu " +
-//                "LEFT JOIN address a ON cu.addressId = a.addressId " +
-//                "LEFT JOIN city ci ON a.cityId = ci.cityId " +
-//                "LEFT JOIN country co ON ci.countryId = co.countryId;"
-//        );
-//
-//        ResultSet rs = ps.executeQuery();
-//
-//        while (rs.next()) {
-//            Survey survey = new Survey();
-//            survey.setSurveyId(rs.getInt(1));
-//            survey.setTitle(rs.getString(2));
-//            survey.setDescription1(rs.getString(3));
-//            survey.setDescription2(rs.getString(4));
-//            survey.setCity(rs.getString(5));
-//            survey.setCountry(rs.getString(6));
-//            survey.setPostalCode(rs.getString(7));
-//            survey.setPhone(rs.getString(8));
-//            survey.setActive(rs.getBoolean(9));
-//            survey.setDescriptionId(rs.getInt(10));
-//
-//            allSurveys.add(survey);
-//        }
-//        rs.close();
-//
-//        return allSurveys;
-//    }
-//
-//    public static void deleteSurvey(Survey survey) throws SQLException {
-//        Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
-//
-//        PreparedStatement ps = conn.prepareStatement("DELETE FROM survey WHERE surveyId = ?");
-//        ps.setInt(1, survey.getSurveyId());
-//        ps.executeUpdate();
-//
-//        /*
-//        PreparedStatement ps2 = conn.prepareStatement("DELETE FROM address WHERE addressId = ?");
-//        ps2.setInt(1, survey.getAddressId());
-//        ps2.executeUpdate();
-//        */
-//    }
-//
-//    public static void updateSurvey(Survey survey) throws SQLException {
-//        Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
-//
-//        System.out.println("Update started...");
-//        System.out.println("Checking country table...");
-//
-//        Integer countryId = addCountry(survey.getCountry());
-//
-//        System.out.println("addCountry() returns "+countryId);
-//        System.out.println("Checking city table...");
-//
-//        Integer cityId = addCity(survey.getCity(), countryId);
-//
-//        System.out.println("addCity() returns "+cityId);
-//        System.out.println("Updating address table...");
-//
-//        PreparedStatement ps2 = conn.prepareStatement("UPDATE address SET address = ?, address2 = ?,  cityId = ?, postalCode = ?, phone = ?, lastUpdate = UTC_TIMESTAMP(), lastUpdateBy = ? WHERE addressId = ?");
-//        ps2.setString(1, survey.getAddress1());
-//        ps2.setString(2, survey.getAddress2());
-//        ps2.setInt(3, cityId);
-//        ps2.setString(4, survey.getPostalCode());
-//        ps2.setString(5, survey.getPhone());
-//        ps2.setString(6, LoginScreenController.getCurrUser());
-//        ps2.setInt(7, survey.getAddressId());
-//        ps2.executeUpdate();
-//
-//        System.out.println("Address table updated");
-//        System.out.println("Updating survey table...");
-//
-//        PreparedStatement ps = conn.prepareStatement("UPDATE survey SET title = ?, lastUpdate = UTC_TIMESTAMP(), lastUpdateBy = ? WHERE surveyId = ?");
-//        ps.setString(1, survey.getTitle());
-//        ps.setString(2, LoginScreenController.getCurrUser());
-//        ps.setInt(3, survey.getSurveyId());
-//        ps.executeUpdate();
-//
-//        System.out.println("Survey table updated");
-//        System.out.println("**Survey update complete**");
-//    }
+    public static ObservableList<Survey> getSurveys() throws SQLException {
+        ObservableList<Survey> allSurveys = FXCollections.observableArrayList();
+
+        Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
+        PreparedStatement ps = conn.prepareStatement("SELECT surveyId, title, description, location FROM survey");
+
+        ResultSet rs = ps.executeQuery();
+
+        while (rs.next()) {
+            Survey survey = new Survey();
+            survey.setSurveyId(rs.getInt(1));
+            survey.setTitle(rs.getString(2));
+            survey.setDescription(rs.getString(3));
+            survey.setLocation(rs.getString(4));
+
+            allSurveys.add(survey);
+        }
+        rs.close();
+
+        return allSurveys;
+    }
+
+    public static void deleteSurvey(Survey survey) throws SQLException {
+        Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
+
+        PreparedStatement ps = conn.prepareStatement("DELETE FROM survey WHERE surveyId = ?");
+        ps.setInt(1, survey.getSurveyId());
+        ps.executeUpdate();
+    }
+
+    public static void updateSurvey(Survey survey) throws SQLException {
+        Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
+
+        System.out.println("Update started...");
+        System.out.println("Updating survey table...");
+
+        PreparedStatement ps = conn.prepareStatement("UPDATE survey SET title = ?, description = ?, location = ?, lastUpdate = UTC_TIMESTAMP(), lastUpdateBy = ? WHERE surveyId = ?");
+        ps.setString(1, survey.getTitle());
+        ps.setString(2, survey.getDescription());
+        ps.setString(3, survey.getLocation());
+        ps.setInt(4, LoginScreenController.getCurrUserId());
+        ps.setInt(5, survey.getSurveyId());
+        ps.executeUpdate();
+
+        System.out.println("Survey table updated");
+        System.out.println("**Survey update complete**");
+    }
 //
 //    private static Boolean checkObservationOverlap(ZonedDateTime startZDT, ZonedDateTime endZDT) throws SQLException {
 //        ObservableList<Observation> allObservations = DBController.getObservations();
