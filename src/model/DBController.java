@@ -2,6 +2,7 @@ package model;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.Alert;
 import view_controller.LoginScreenController;
 
 import java.sql.*;
@@ -127,36 +128,31 @@ public class DBController {
 //        return false;
 //    }
 //
-//    public static Integer addObservation(Observation observation) throws SQLException {
-//
-//        Timestamp startTS = Timestamp.valueOf(observation.getStart().toLocalDateTime());
-//        Timestamp endTS = Timestamp.valueOf(observation.getEnd().toLocalDateTime());
-//
-//        if (!checkObservationOverlap(observation.getStart(), observation.getEnd())) {
-//            System.out.println(checkObservationOverlap(observation.getStart(), observation.getEnd()));
-//            Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
-//            PreparedStatement ps = conn.prepareStatement("" +
-//                    "INSERT INTO observation (" +
-//                    "surveyId, userId, title, description, location, contact, type, url, start, end, createDate, createdBy, lastUpdate, lastUpdateBy" +
-//                    ") " +
-//                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, UTC_TIMESTAMP(), ?, UTC_TIMESTAMP(), ?)" // wow, there must be a better way to do these prepared statements...
-//            );
-//
-//            ps.setInt(1, observation.getSurveyId());
-//            ps.setInt(2, observation.getUserId());
-//            ps.setString(3, observation.getTitle());
-//            ps.setString(4, observation.getDescription());
-//            ps.setString(5, observation.getLocation());
-//            ps.setString(6, observation.getContact());
-//            ps.setString(7, observation.getType());
-//            ps.setString(8, observation.getUrl());
-//            ps.setTimestamp(9, startTS);
-//            ps.setTimestamp(10, endTS);
-//            ps.setString(11, LoginScreenController.getCurrUser());
-//            ps.setString(12, LoginScreenController.getCurrUser());
-//            ps.executeUpdate();
-//
-//            return 1;
+    public static Integer addObservation(Observation observation) throws SQLException {
+        System.out.println(observation.getDate());
+        Timestamp dateTS = Timestamp.valueOf(observation.getDate().toLocalDateTime());
+
+        //if (!checkObservationOverlap(observation.getStart(), observation.getEnd())) {
+            //System.out.println(checkObservationOverlap(observation.getStart(), observation.getEnd()));
+            Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
+            PreparedStatement ps = conn.prepareStatement("" +
+                    "INSERT INTO observation (" +
+                    "survey_id, common_name, binomial_name, location, kingdom, observation_date, createDate, createdBy, lastUpdate, lastUpdateBy" +
+                    ") " +
+                    "VALUES (?, ?, ?, ?, ?, ?, UTC_TIMESTAMP(), ?, UTC_TIMESTAMP(), ?)" // wow, there must be a better way to do these prepared statements...
+            );
+
+            ps.setInt(1, observation.getSurveyId());
+            ps.setString(2, observation.getCommon());
+            ps.setString(3, observation.getBinomial());
+            ps.setString(4, observation.getLocation());
+            ps.setString(5, observation.getKingdom());
+            ps.setTimestamp(6, dateTS);
+            ps.setInt(7, LoginScreenController.getCurrUserId());
+            ps.setInt(8, LoginScreenController.getCurrUserId());
+            ps.executeUpdate();
+
+            return 1;
 //        } else {
 //            System.out.println("Overlapping observation");
 //            Alert emptyFields = new Alert(Alert.AlertType.ERROR);
@@ -166,7 +162,7 @@ public class DBController {
 //            emptyFields.showAndWait();
 //        }
 //        return 0;
-//    }
+    }
 //
 //    public static ObservableList<Observation> getObservations() throws SQLException {
 //        ObservableList<Observation> allObservations = FXCollections.observableArrayList();
