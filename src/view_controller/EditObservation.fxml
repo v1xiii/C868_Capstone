@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.collections.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<GridPane alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="700.0" style="-fx-background-color: #bfcbe0;" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view_controller.AddObservationController">
+    <columnConstraints>
+        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        <ColumnConstraints hgrow="SOMETIMES" maxWidth="315.0" minWidth="10.0" prefWidth="99.0" />
+        <ColumnConstraints hgrow="SOMETIMES" maxWidth="454.0" minWidth="10.0" prefWidth="454.0" />
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints maxHeight="249.0" minHeight="3.0" prefHeight="131.0" vgrow="SOMETIMES" />
+        <RowConstraints maxHeight="419.0" minHeight="10.0" prefHeight="275.0" vgrow="SOMETIMES" />
+        <RowConstraints maxHeight="157.0" minHeight="10.0" prefHeight="131.0" vgrow="SOMETIMES" />
+    </rowConstraints>
+    <padding>
+        <Insets left="20.0" right="20.0" />
+    </padding>
+    <Label style="-fx-background-color: #ccd2db; -fx-border-style: solid;" text="Edit Observation" GridPane.columnSpan="2147483647" GridPane.halignment="CENTER">
+        <font>
+            <Font name="System Bold" size="24.0" />
+        </font>
+        <GridPane.margin>
+            <Insets />
+        </GridPane.margin>
+        <padding>
+            <Insets left="20.0" right="20.0" />
+        </padding>
+    </Label>
+    <Button fx:id="button_save" mnemonicParsing="false" onAction="#saveButtonHandler" prefWidth="100.0" text="Save" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
+    <GridPane style="-fx-background-color: #ccd2db;" GridPane.columnIndex="2" GridPane.rowIndex="1">
+        <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="197.0" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="324.0" minWidth="10.0" prefWidth="304.0" />
+        </columnConstraints>
+        <rowConstraints>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+        <padding>
+            <Insets bottom="10.0" left="20.0" right="20.0" top="10.0" />
+        </padding>
+        <GridPane.margin>
+            <Insets left="10.0" />
+        </GridPane.margin>
+        <Label text="Common Name" GridPane.rowIndex="1">
+            <font>
+                <Font name="System Bold" size="12.0" />
+            </font>
+            <GridPane.margin>
+                <Insets />
+            </GridPane.margin>
+        </Label>
+        <TextField id="input_name" fx:id="input_common" GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <GridPane.margin>
+                <Insets />
+            </GridPane.margin></TextField>
+        <Label text="Binomial Name" GridPane.rowIndex="2">
+            <font>
+                <Font name="System Bold" size="12.0" />
+            </font>
+        </Label>
+        <TextField id="input_address" fx:id="input_binomial" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+        <Label layoutX="30.0" layoutY="53.0" text="Location" GridPane.rowIndex="3">
+            <font>
+                <Font name="System Bold" size="12.0" />
+            </font>
+        </Label>
+        <Label layoutX="30.0" layoutY="119.0" text="Date" GridPane.columnIndex="1">
+            <font>
+                <Font name="System Bold" size="12.0" />
+            </font>
+            <GridPane.margin>
+                <Insets left="125.0" />
+            </GridPane.margin>
+        </Label>
+        <DatePicker fx:id="datepicker_date" prefWidth="100.0" GridPane.columnIndex="1">
+            <GridPane.margin>
+                <Insets left="175.0" />
+            </GridPane.margin></DatePicker>
+        <Label layoutX="225.0" layoutY="120.0" text="Kingdom">
+            <font>
+                <Font name="System Bold" size="12.0" />
+            </font>
+        </Label>
+        <TextField id="input_address" fx:id="input_location" layoutX="110.0" layoutY="159.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+        <ChoiceBox fx:id="dropdown_kingdom" layoutX="110.0" layoutY="245.0" prefWidth="100.0" GridPane.columnIndex="1">
+            <items>
+                <FXCollections fx:factory="observableArrayList">
+                    <String fx:value="Plantae" />
+                    <String fx:value="Animalia" />
+                    <String fx:value="Fungi" />
+                    <String fx:value="Protozoa" />
+                    <String fx:value="Chromista" />
+                    <String fx:value="Bacteria" />
+                    <String fx:value="Archaea" />
+                </FXCollections>
+            </items>
+        </ChoiceBox>
+    </GridPane>
+    <Button fx:id="button_cancel" layoutX="370.0" layoutY="456.0" mnemonicParsing="false" onAction="#cancelButtonHandler" prefWidth="100.0" text="Cancel" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
+        <GridPane.margin>
+            <Insets left="10.0" right="150.0" />
+        </GridPane.margin>
+    </Button>
+    <TableView fx:id="table_surveys" prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="2" GridPane.rowIndex="1">
+        <columns>
+            <TableColumn fx:id="table_survey_id" prefWidth="75.0" text="ID" />
+            <TableColumn fx:id="table_survey_name" prefWidth="117.0" text="Survey Name" />
+        </columns>
+        <GridPane.margin>
+            <Insets right="10.0" />
+        </GridPane.margin>
+    </TableView>
+</GridPane>

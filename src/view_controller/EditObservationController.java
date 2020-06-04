@@ -2,8 +2,11 @@ package view_controller;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
@@ -11,6 +14,7 @@ import model.Observation;
 import model.Survey;
 import model.DBController;
 
+import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.time.*;
@@ -18,8 +22,10 @@ import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 import java.util.TimeZone;
 
-public class AddObservationController implements Initializable {
+import static java.time.DayOfWeek.SATURDAY;
+import static java.time.DayOfWeek.SUNDAY;
 
+public class EditObservationController implements Initializable {
     public Button button_cancel;
     public Button button_save;
 
@@ -33,10 +39,36 @@ public class AddObservationController implements Initializable {
     @FXML private ChoiceBox dropdown_kingdom;
     @FXML private DatePicker datepicker_date;
 
+    private Observation observation;
+
     public void initialize(URL url, ResourceBundle rb) {
+        observation = ViewObservationController.getObservationToModify();
+
+        input_common.setText(observation.getCommon());
+        input_binomial.setText(observation.getBinomial());
+        input_location.setText(observation.getLocation());
+        dropdown_kingdom.setValue(observation.getKingdom());
+
+        // this lambda goes through all the dates on the datepicker and disables dates prior to today and also weekends
+        datepicker_date.setDayCellFactory(picker -> new DateCell() {
+            public void updateItem(LocalDate date, boolean empty) {
+            super.updateItem(date, empty);
+            LocalDate today = LocalDate.now();
+            DayOfWeek dayOfWeek = date.getDayOfWeek();
+            setDisable(empty || date.compareTo(today) < 0 || dayOfWeek == SATURDAY || dayOfWeek == SUNDAY);
+            }
+        });
+
+        // set the datepicker value
+        LocalDate date = observation.getDate().toLocalDate();
+        datepicker_date.setValue(date);
+
+        // set the times
+        DateTimeFormatter formatTime = DateTimeFormatter.ofPattern("h:mm a");
+
         // populate surveys table
         table_survey_id.setCellValueFactory(new PropertyValueFactory<>("surveyId"));
-        table_survey_name.setCellValueFactory(new PropertyValueFactory<>("title"));
+        table_survey_name.setCellValueFactory(new PropertyValueFactory<>("surveyName"));
         table_surveys.refresh();
         try {
             table_surveys.setItems(DBController.getSurveys());
@@ -44,24 +76,27 @@ public class AddObservationController implements Initializable {
             e.printStackTrace();
         }
 
-        // this lambda goes through all the dates on the datepicker and disables dates prior to today and also weekends
-        datepicker_date.setDayCellFactory(picker -> new DateCell() {
-            public void updateItem(LocalDate date, boolean empty) {
-            super.updateItem(date, empty);
-            LocalDate today = LocalDate.now();
-            setDisable(empty || date.compareTo(today) < 0);
+        // select the survey for this observation
+        for (Survey survey : table_surveys.getItems()) {
+            if (table_survey_id.getCellData(survey).equals(observation.getSurveyId())){
+                table_surveys.getSelectionModel().select(survey);
+                break;
             }
-        });
+        }
     }
 
     @FXML
-    private void cancelButtonHandler(ActionEvent event) {
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        stage.close();
+    private void cancelButtonHandler(ActionEvent event) throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("ViewObservation.fxml"));
+        Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
+        stage.setTitle("Observations");
+        stage.setScene(new Scene(root, 700, 550));
+        stage.centerOnScreen();
+        stage.show();
     }
 
     @FXML
-    private void saveButtonHandler (ActionEvent event) {
+    private void saveButtonHandler (ActionEvent event) throws IOException {
         Survey selectedSurvey = table_surveys.getSelectionModel().getSelectedItem();
 
         Integer surveyId = selectedSurvey.getSurveyId();
@@ -101,8 +136,12 @@ public class AddObservationController implements Initializable {
         }
 
         if (response == 1){
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.close();
+            Parent root = FXMLLoader.load(getClass().getResource("ViewObservation.fxml"));
+            Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
+            stage.setTitle("Observations");
+            stage.setScene(new Scene(root, 700, 550));
+            stage.centerOnScreen();
+            stage.show();
         }
     }
 }

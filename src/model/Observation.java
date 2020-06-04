@@ -78,5 +78,4 @@ public class Observation {
     public ZonedDateTime getDate() {
         return date;
     }
-
 }

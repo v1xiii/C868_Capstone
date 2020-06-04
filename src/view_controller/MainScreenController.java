@@ -30,7 +30,7 @@ public class MainScreenController implements Initializable {
 //        private void logoutButtonHandler(ActionEvent event) throws IOException {
 //            Parent root = FXMLLoader.load(getClass().getResource("LoginScreen.fxml"));
 //            Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
-//            stage.setTitle("Scheduler Login");
+//            stage.setTitle("SODA Login");
 //            stage.setScene(new Scene(root, 550, 500));
 //            stage.centerOnScreen();
 //            stage.show();
@@ -41,7 +41,7 @@ public class MainScreenController implements Initializable {
             try {
                 Parent root = FXMLLoader.load(getClass().getResource("../resources/LoginScreen.fxml"));
                 Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
-                stage.setTitle("Scheduler Login");
+                stage.setTitle("SODA Login");
                 stage.setScene(new Scene(root, 550, 500));
                 stage.centerOnScreen();
                 stage.show();
@@ -126,31 +126,31 @@ public class MainScreenController implements Initializable {
 
     @FXML
     private void reportObservationTypesButtonHandler() throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("ReportObservationTypes.fxml"));
-        Stage stage = new Stage();
-        stage.setTitle("Observation Types");
-        stage.initModality(Modality.APPLICATION_MODAL);
-        stage.setScene(new Scene(root, 550, 700));
-        stage.show();
+//        Parent root = FXMLLoader.load(getClass().getResource("ReportObservationTypes.fxml"));
+//        Stage stage = new Stage();
+//        stage.setTitle("Observation Types");
+//        stage.initModality(Modality.APPLICATION_MODAL);
+//        stage.setScene(new Scene(root, 550, 700));
+//        stage.show();
     }
 
     @FXML
     private void reportConsultantScheduleButtonHandler() throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("ReportConsultantSchedule.fxml"));
-        Stage stage = new Stage();
-        stage.setTitle("Consultant Schedule");
-        stage.initModality(Modality.APPLICATION_MODAL);
-        stage.setScene(new Scene(root, 550, 700));
-        stage.show();
+//        Parent root = FXMLLoader.load(getClass().getResource("ReportConsultantSchedule.fxml"));
+//        Stage stage = new Stage();
+//        stage.setTitle("Consultant Schedule");
+//        stage.initModality(Modality.APPLICATION_MODAL);
+//        stage.setScene(new Scene(root, 550, 700));
+//        stage.show();
     }
 
     @FXML
     private void reportSurveysPerCityButtonHandler() throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("ReportSurveysPerCity.fxml"));
-        Stage stage = new Stage();
-        stage.setTitle("Surveys Per City");
-        stage.initModality(Modality.APPLICATION_MODAL);
-        stage.setScene(new Scene(root, 550, 700));
-        stage.show();
+//        Parent root = FXMLLoader.load(getClass().getResource("ReportSurveysPerCity.fxml"));
+//        Stage stage = new Stage();
+//        stage.setTitle("Surveys Per City");
+//        stage.initModality(Modality.APPLICATION_MODAL);
+//        stage.setScene(new Scene(root, 550, 700));
+//        stage.show();
     }
 }

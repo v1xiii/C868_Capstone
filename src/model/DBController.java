@@ -6,6 +6,9 @@ import javafx.scene.control.Alert;
 import view_controller.LoginScreenController;
 
 import java.sql.*;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 
 public class DBController {
 
@@ -163,47 +166,39 @@ public class DBController {
 //        }
 //        return 0;
     }
-//
-//    public static ObservableList<Observation> getObservations() throws SQLException {
-//        ObservableList<Observation> allObservations = FXCollections.observableArrayList();
-//
-//        Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
-//        PreparedStatement ps = conn.prepareStatement("SELECT * FROM observation ORDER BY start");
-//
-//        ResultSet rs = ps.executeQuery();
-//
-//        while (rs.next()) {
-//            Observation observation = new Observation();
-//            observation.setObservationId(Integer.parseInt(rs.getString(1)));
-//            observation.setSurveyId(Integer.parseInt(rs.getString(2)));
-//            observation.setUserId(Integer.parseInt(rs.getString(3)));
-//            observation.setTitle(rs.getString(4));
-//            observation.setDescription(rs.getString(5));
-//            observation.setLocation(rs.getString(6));
-//            observation.setContact(rs.getString(7));
-//            observation.setType(rs.getString(8));
-//            observation.setUrl(rs.getString(9));
-//
-//            Timestamp startTS = rs.getTimestamp(10);
-//            LocalDateTime startLDT = startTS.toLocalDateTime();
-//            ZonedDateTime startUTC = startLDT.atZone(ZoneId.of("UTC"));
-//            ZonedDateTime startZDT = startUTC.withZoneSameInstant(ZoneId.systemDefault());
-//
-//            Timestamp endTS = rs.getTimestamp(11);
-//            LocalDateTime endLDT = endTS.toLocalDateTime();
-//            ZonedDateTime endUTC = endLDT.atZone(ZoneId.of("UTC"));
-//            ZonedDateTime endZDT = endUTC.withZoneSameInstant(ZoneId.systemDefault());
-//
-//            observation.setStart(startZDT);
-//            observation.setEnd(endZDT);
-//
-//            allObservations.add(observation);
-//        }
-//        rs.close();
-//
-//        return allObservations;
-//    }
-//
+
+    public static ObservableList<Observation> getObservations() throws SQLException {
+        ObservableList<Observation> allObservations = FXCollections.observableArrayList();
+
+        Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
+        PreparedStatement ps = conn.prepareStatement("SELECT * FROM observation ORDER BY observation_date");
+
+        ResultSet rs = ps.executeQuery();
+
+        while (rs.next()) {
+            Observation observation = new Observation();
+            observation.setObservationId(Integer.parseInt(rs.getString(1)));
+            observation.setSurveyId(Integer.parseInt(rs.getString(2)));
+            observation.setKingdom(rs.getString(3));
+            observation.setBinomial(rs.getString(4));
+            observation.setCommon(rs.getString(5));
+            observation.setLocation(rs.getString(6));
+            Timestamp startTS = rs.getTimestamp(7);
+            observation.setUserId(Integer.parseInt(rs.getString(9)));
+
+            LocalDateTime startLDT = startTS.toLocalDateTime();
+            ZonedDateTime startUTC = startLDT.atZone(ZoneId.of("UTC"));
+            ZonedDateTime startZDT = startUTC.withZoneSameInstant(ZoneId.systemDefault());
+
+            observation.setDate(startZDT);
+
+            allObservations.add(observation);
+        }
+        rs.close();
+
+        return allObservations;
+    }
+
 //    public static int updateObservation(Observation observation) throws SQLException {
 //        Timestamp startTS = Timestamp.valueOf(observation.getStart().toLocalDateTime());
 //        Timestamp endTS = Timestamp.valueOf(observation.getEnd().toLocalDateTime());
@@ -240,12 +235,12 @@ public class DBController {
 //        return 0;
 //    }
 //
-//    public static void deleteObservation(Observation observation) throws SQLException {
-//        Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
-//        PreparedStatement ps = conn.prepareStatement("DELETE FROM observation WHERE observationId = ?");
-//        ps.setInt(1, observation.getObservationId());
-//        ps.executeUpdate();
-//    }
+    public static void deleteObservation(Observation observation) throws SQLException {
+        Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
+        PreparedStatement ps = conn.prepareStatement("DELETE FROM observation WHERE observationId = ?");
+        ps.setInt(1, observation.getObservationId());
+        ps.executeUpdate();
+    }
 //
 //    public static ObservableList<ReportItem> getObservationsByType() throws SQLException {
 //        ObservableList<ReportItem> allObservations = FXCollections.observableArrayList();
