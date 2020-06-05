@@ -199,31 +199,28 @@ public class DBController {
         return allObservations;
     }
 
-//    public static int updateObservation(Observation observation) throws SQLException {
-//        Timestamp startTS = Timestamp.valueOf(observation.getStart().toLocalDateTime());
+    public static int updateObservation(Observation observation) throws SQLException {
+        Timestamp dateTS = Timestamp.valueOf(observation.getDate().toLocalDateTime());
 //        Timestamp endTS = Timestamp.valueOf(observation.getEnd().toLocalDateTime());
-//
-//        if (!checkObservationOverlap(observation.getStart(), observation.getEnd())) {
-//            System.out.println(checkObservationOverlap(observation.getStart(), observation.getEnd()));
-//            Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
-//            PreparedStatement ps = conn.prepareStatement("UPDATE observation SET surveyId = ?, UserId = ?, title = ?, description = ?, location = ?, contact = ?, type = ?, url = ?, start = ?, end = ?, lastUpdate = UTC_TIMESTAMP(), lastUpdateBy = ? WHERE observationId = ?");
-//            ps.setInt(1, observation.getSurveyId());
-//            ps.setInt(2, observation.getUserId());
-//            ps.setString(3, observation.getTitle());
-//            ps.setString(4, observation.getDescription());
-//            ps.setString(5, observation.getLocation());
-//            ps.setString(6, observation.getContact());
-//            ps.setString(7, observation.getType());
-//            ps.setString(8, observation.getUrl());
-//            ps.setTimestamp(9, startTS);
-//            ps.setTimestamp(10, endTS);
-//            ps.setString(11, LoginScreenController.getCurrUser());
-//            ps.setInt(12, observation.getObservationId());
-//            ps.executeUpdate();
-//
-//            System.out.println("**Observation update complete**");
-//
-//            return 1;
+        System.out.println(observation.getObservationId());
+        //if (!checkObservationOverlap(observation.getStart(), observation.getEnd())) {
+            //System.out.println(checkObservationOverlap(observation.getStart(), observation.getEnd()));
+            Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
+            PreparedStatement ps = conn.prepareStatement("UPDATE observation SET survey_id = ?, common_name = ?, binomial_name = ?, location = ?, kingdom = ?, observation_date = ?, lastUpdate = UTC_TIMESTAMP(), lastUpdateBy = ? WHERE observation_id = ?");
+            ps.setInt(1, observation.getSurveyId());
+            ps.setString(2, observation.getCommon());
+            ps.setString(3, observation.getBinomial());
+            ps.setString(4, observation.getLocation());
+            ps.setString(5, observation.getKingdom());
+            ps.setTimestamp(6, dateTS);
+            ps.setInt(7, LoginScreenController.getCurrUserId());
+            ps.setInt(8, observation.getObservationId());
+
+            ps.executeUpdate();
+
+            System.out.println("**Observation update complete**");
+
+            return 1;
 //        } else {
 //            System.out.println("Overlapping observation");
 //            Alert emptyFields = new Alert(Alert.AlertType.ERROR);
@@ -233,11 +230,11 @@ public class DBController {
 //            emptyFields.showAndWait();
 //        }
 //        return 0;
-//    }
-//
+    }
+
     public static void deleteObservation(Observation observation) throws SQLException {
         Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
-        PreparedStatement ps = conn.prepareStatement("DELETE FROM observation WHERE observationId = ?");
+        PreparedStatement ps = conn.prepareStatement("DELETE FROM observation WHERE observation_id = ?");
         ps.setInt(1, observation.getObservationId());
         ps.executeUpdate();
     }

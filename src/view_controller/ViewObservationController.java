@@ -28,10 +28,10 @@ public class ViewObservationController implements Initializable {
     @FXML public Button button_view;
     @FXML private TableView<Observation> table_observations;
     @FXML private TableColumn<Observation, Integer> col_survey_id;
-    @FXML private TableColumn<Observation, String> col_title;
-    @FXML private TableColumn<Observation, String> col_type;
+    @FXML private TableColumn<Observation, String> col_common;
+    @FXML private TableColumn<Observation, String> col_binomial;
     @FXML private TableColumn<Observation, String> col_location;
-    @FXML private TableColumn<Observation, ZonedDateTime> col_start;
+    @FXML private TableColumn<Observation, ZonedDateTime> col_date;
     @FXML private ChoiceBox dropdown_filter;
 
     private ObservableList<Observation> allObservations;
@@ -46,10 +46,10 @@ public class ViewObservationController implements Initializable {
 
         // populate observations table
         col_survey_id.setCellValueFactory(new PropertyValueFactory<>("surveyId"));
-        col_title.setCellValueFactory(new PropertyValueFactory<>("title"));
-        col_type.setCellValueFactory(new PropertyValueFactory<>("type"));
+        col_common.setCellValueFactory(new PropertyValueFactory<>("common"));
+        col_binomial.setCellValueFactory(new PropertyValueFactory<>("binomial"));
         col_location.setCellValueFactory(new PropertyValueFactory<>("location"));
-        col_start.setCellValueFactory(new PropertyValueFactory<>("start"));
+        col_date.setCellValueFactory(new PropertyValueFactory<>("date"));
         table_observations.refresh();
         table_observations.setItems(allObservations);
     }

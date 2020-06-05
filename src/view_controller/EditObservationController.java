@@ -41,8 +41,13 @@ public class EditObservationController implements Initializable {
 
     private Observation observation;
 
+    public EditObservationController() {
+    }
+
     public void initialize(URL url, ResourceBundle rb) {
         observation = ViewObservationController.getObservationToModify();
+
+        System.out.println(observation.getObservationId());
 
         input_common.setText(observation.getCommon());
         input_binomial.setText(observation.getBinomial());
@@ -64,11 +69,11 @@ public class EditObservationController implements Initializable {
         datepicker_date.setValue(date);
 
         // set the times
-        DateTimeFormatter formatTime = DateTimeFormatter.ofPattern("h:mm a");
+        //DateTimeFormatter formatTime = DateTimeFormatter.ofPattern("h:mm a");
 
         // populate surveys table
         table_survey_id.setCellValueFactory(new PropertyValueFactory<>("surveyId"));
-        table_survey_name.setCellValueFactory(new PropertyValueFactory<>("surveyName"));
+        table_survey_name.setCellValueFactory(new PropertyValueFactory<>("title"));
         table_surveys.refresh();
         try {
             table_surveys.setItems(DBController.getSurveys());
@@ -117,20 +122,21 @@ public class EditObservationController implements Initializable {
 
         ZonedDateTime startUTC = startZDT.withZoneSameInstant(ZoneId.of("UTC"));
 
-        Observation observation = new Observation();
-        observation.setSurveyId(surveyId);
-        observation.setUserId(userId);
-        observation.setCommon(common);
-        observation.setBinomial(binomial);
-        observation.setLocation(location);
-        observation.setKingdom(kingdom);
-        observation.setDate(startUTC);
+        Observation updatedObservation = new Observation();
+        updatedObservation.setObservationId(observation.getObservationId());
+        updatedObservation.setSurveyId(surveyId);
+        updatedObservation.setUserId(userId);
+        updatedObservation.setCommon(common);
+        updatedObservation.setBinomial(binomial);
+        updatedObservation.setLocation(location);
+        updatedObservation.setKingdom(kingdom);
+        updatedObservation.setDate(startUTC);
 
         System.out.println(startUTC);
 
         int response = 0;
         try {
-            response = DBController.addObservation(observation);
+            response = DBController.updateObservation(updatedObservation);
         } catch (SQLException e) {
             e.printStackTrace();
         }
