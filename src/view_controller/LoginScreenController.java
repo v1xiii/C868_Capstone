@@ -82,7 +82,7 @@ public class LoginScreenController implements Initializable {
             Path path = Paths.get("logins.txt");
             Files.write(path, Collections.singletonList("User:" + currUser + " -- Login Time: " + Date.from(Instant.now()).toString() + "."), StandardCharsets.UTF_8, Files.exists(path) ? StandardOpenOption.APPEND : StandardOpenOption.CREATE);
 
-            Parent root = FXMLLoader.load(getClass().getResource("../resources/MainScreen.fxml"));
+            Parent root = FXMLLoader.load(getClass().getResource("MainScreen.fxml"));
             Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
             stage.setTitle("SODA Main Screen");
             stage.setScene(new Scene(root, 550, 700));
