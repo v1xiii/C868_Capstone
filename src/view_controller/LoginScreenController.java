@@ -9,7 +9,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
@@ -36,8 +35,6 @@ public class LoginScreenController implements Initializable {
     public Button button_login;
 
     @FXML
-    private Label label_username, label_password, label_login;
-    @FXML
     private TextField input_username, input_password;
 
     public void initialize(URL url, ResourceBundle rb) {}
@@ -50,10 +47,6 @@ public class LoginScreenController implements Initializable {
         currUserId = userId;
     }
 
-    public static String getCurrUser(){
-        return currUser;
-    }
-
     public static Integer getCurrUserId(){
         return currUserId;
     }
@@ -63,25 +56,27 @@ public class LoginScreenController implements Initializable {
         String username = input_username.getText();
         String password = input_password.getText();
         Integer emptyThrown = 0;
-        //currUserId = -1;
-        currUserId = 1; // TODO: delete this and the next line when complete
-        setCurrUserId(checkLogin("test", "test"));
+        currUserId = -1; // comment this out for bypassing login during development
 
-//        try {
-//            if (username.equals("") || password.equals("")) {
-//                throw new IllegalArgumentException();
-//            } else {
-//                setCurrUserId(checkLogin(username, password));
-//            }
-//        } catch (IllegalArgumentException iae){
-//            Alert emptyFields = new Alert(Alert.AlertType.WARNING);
-//
-//            emptyFields.setTitle("Warning");
-//            emptyFields.setHeaderText("Username and password are required");
-//            emptyFields.setContentText("Please complete both fields.");
-//            emptyFields.showAndWait();
-//            emptyThrown = 1;
-//        }
+        // use these lines for bypassing login during development
+//        currUserId = 1;
+//        setCurrUserId(checkLogin("test", "test"));
+
+        try {
+            if (username.equals("") || password.equals("")) {
+                throw new IllegalArgumentException();
+            } else {
+                setCurrUserId(checkLogin(username, password));
+            }
+        } catch (IllegalArgumentException iae){
+            Alert emptyFields = new Alert(Alert.AlertType.WARNING);
+
+            emptyFields.setTitle("Warning");
+            emptyFields.setHeaderText("Username and password are required");
+            emptyFields.setContentText("Please complete both fields.");
+            emptyFields.showAndWait();
+            emptyThrown = 1;
+        }
 
         if (currUserId > -1){
             Path path = Paths.get("logins.txt");

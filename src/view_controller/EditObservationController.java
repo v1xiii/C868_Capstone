@@ -36,7 +36,7 @@ public class EditObservationController implements Initializable {
     @FXML private TextField input_common;
     @FXML private TextField input_binomial;
     @FXML private TextField input_location;
-    @FXML private ChoiceBox dropdown_kingdom;
+    @FXML private ChoiceBox<String> dropdown_kingdom;
     @FXML private DatePicker datepicker_date;
 
     private Observation observation;
@@ -109,7 +109,7 @@ public class EditObservationController implements Initializable {
         String common = input_common.getText();
         String binomial = input_binomial.getText();
         String location = input_location.getText();
-        String kingdom = dropdown_kingdom.getValue().toString();
+        String kingdom = dropdown_kingdom.getValue();
         LocalDate date = datepicker_date.getValue();
 
         DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd h:mm a");

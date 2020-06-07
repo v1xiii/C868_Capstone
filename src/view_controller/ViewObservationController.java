@@ -1,6 +1,5 @@
 package view_controller;
 
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -12,8 +11,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
-import model.Observation;
 import model.DBController;
+import model.Observation;
 
 import java.io.IOException;
 import java.net.URL;
@@ -27,13 +26,14 @@ public class ViewObservationController implements Initializable {
     @FXML public Button button_delete;
     @FXML public Button button_close;
     @FXML public Button button_view;
+    public Button button_search;
     @FXML private TableView<Observation> table_observations;
     @FXML private TableColumn<Observation, Integer> col_survey_id;
     @FXML private TableColumn<Observation, String> col_common;
     @FXML private TableColumn<Observation, String> col_binomial;
     @FXML private TableColumn<Observation, String> col_location;
     @FXML private TableColumn<Observation, ZonedDateTime> col_date;
-    @FXML private ChoiceBox dropdown_filter;
+    //@FXML private ChoiceBox dropdown_filter;
     @FXML private TextField input_search;
 
     private ObservableList<Observation> allObservations;
@@ -99,7 +99,7 @@ public class ViewObservationController implements Initializable {
     }
 
     @FXML
-    public void searchObservations(ActionEvent event) throws IOException, SQLException {
+    public void searchObservations(ActionEvent event) throws SQLException {
         String searchTerm = input_search.getText().toLowerCase();
 
         if(DBController.getObservations(searchTerm).size() <= 0){

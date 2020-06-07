@@ -1,5 +1,6 @@
 package view_controller;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -9,7 +10,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-//import model.Observation;
 
 import java.io.IOException;
 import java.net.URL;
@@ -20,35 +20,20 @@ public class MainScreenController implements Initializable {
     public Button button_add_observation;
     public Button button_edit_observation;
     public Button button_edit_survey;
-
-    @FXML private Button button_logout;
-    @FXML private Button button_add_survey;
+    public Button button_logout;
+    public Button button_add_survey;
 
     public void initialize(URL url, ResourceBundle rb) {
+    }
 
-//        @FXML
-//        private void logoutButtonHandler(ActionEvent event) throws IOException {
-//            Parent root = FXMLLoader.load(getClass().getResource("LoginScreen.fxml"));
-//            Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
-//            stage.setTitle("SODA Login");
-//            stage.setScene(new Scene(root, 550, 500));
-//            stage.centerOnScreen();
-//            stage.show();
-//        }
-
-
-        button_logout.setOnAction(event -> { // this lambda is an alternative to specifying a function that runs on button click in FXML. Seems to not be very useful in a program that is using FXML, but this looks like it could be useful for applying to many buttons that do similar things
-            try {
-                Parent root = FXMLLoader.load(getClass().getResource("../resources/LoginScreen.fxml"));
-                Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
-                stage.setTitle("SODA Login");
-                stage.setScene(new Scene(root, 550, 500));
-                stage.centerOnScreen();
-                stage.show();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
+    @FXML
+    private void logoutButtonHandler(ActionEvent event) throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("../resources/LoginScreen.fxml"));
+        Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
+        stage.setTitle("SODA Login");
+        stage.setScene(new Scene(root, 550, 500));
+        stage.centerOnScreen();
+        stage.show();
     }
 
     @FXML
