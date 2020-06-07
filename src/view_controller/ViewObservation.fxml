@@ -59,16 +59,24 @@
           <Insets top="10.0" />
         </GridPane.margin>
     </Button>
-    <ChoiceBox fx:id="dropdown_filter" onAction="#filterChoiceHandler" prefWidth="150.0" value="All" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.valignment="BOTTOM">
-        <GridPane.margin>
-          <Insets bottom="10.0" />
-        </GridPane.margin>
-        <items>
-            <FXCollections fx:factory="observableArrayList">
-                <String fx:value="All" />
-                <String fx:value="This Month" />
-                <String fx:value="This Week" />
-            </FXCollections>
-        </items>
-    </ChoiceBox>
+<!--    <ChoiceBox fx:id="dropdown_filter" onAction="#filterChoiceHandler" prefWidth="110.0" value="All" GridPane.halignment="RIGHT" GridPane.valignment="BOTTOM">-->
+<!--        <GridPane.margin>-->
+<!--          <Insets bottom="10.0" />-->
+<!--        </GridPane.margin>-->
+<!--        <items>-->
+<!--            <FXCollections fx:factory="observableArrayList">-->
+<!--                <String fx:value="All" />-->
+<!--                <String fx:value="This Month" />-->
+<!--                <String fx:value="This Week" />-->
+<!--            </FXCollections>-->
+<!--        </items>-->
+<!--    </ChoiceBox>-->
+    <Button fx:id="button_search" mnemonicParsing="false" onAction="#searchObservations" prefHeight="20.0" prefWidth="75.0" text="Search" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.valignment="BOTTOM">
+      <GridPane.margin>
+         <Insets bottom="10.0" />
+      </GridPane.margin></Button>
+    <TextField fx:id="input_search" maxWidth="110.0" prefHeight="10.0" prefWidth="125.0" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.valignment="BOTTOM">
+      <GridPane.margin>
+         <Insets bottom="10.0" />
+      </GridPane.margin></TextField>
 </GridPane>

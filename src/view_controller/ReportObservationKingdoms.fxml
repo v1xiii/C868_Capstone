@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<GridPane alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="550.0" style="-fx-background-color: #bfcbe0;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view_controller.ReportObservationKingdomsController">
+    <columnConstraints>
+        <ColumnConstraints hgrow="SOMETIMES" maxWidth="215.0" minWidth="10.0" prefWidth="197.0" />
+        <ColumnConstraints hgrow="SOMETIMES" maxWidth="315.0" minWidth="10.0" prefWidth="263.0" />
+        <ColumnConstraints hgrow="SOMETIMES" maxWidth="313.0" minWidth="10.0" prefWidth="199.0" />
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints maxHeight="249.0" minHeight="3.0" prefHeight="131.0" vgrow="SOMETIMES" />
+        <RowConstraints maxHeight="500.0" minHeight="10.0" prefHeight="500.0" vgrow="SOMETIMES" />
+        <RowConstraints maxHeight="157.0" minHeight="10.0" prefHeight="131.0" vgrow="SOMETIMES" />
+    </rowConstraints>
+    <padding>
+        <Insets left="20.0" right="20.0" />
+    </padding>
+    <Label style="-fx-background-color: #ccd2db; -fx-border-style: solid;" text="Observations By Kingdom" GridPane.columnSpan="2147483647" GridPane.halignment="CENTER">
+        <font>
+            <Font name="System Bold" size="24.0" />
+        </font>
+        <GridPane.margin>
+            <Insets />
+        </GridPane.margin>
+        <padding>
+            <Insets left="20.0" right="20.0" />
+        </padding>
+    </Label>
+    <Button fx:id="button_close" layoutX="370.0" layoutY="456.0" mnemonicParsing="false" onAction="#cancelButtonHandler" prefWidth="100.0" text="Close" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
+        <GridPane.margin>
+            <Insets left="10.0" />
+        </GridPane.margin>
+    </Button>
+    <TableView fx:id="table_observations" GridPane.columnSpan="2147483647" GridPane.rowIndex="1">
+        <columns>
+            <TableColumn fx:id="col_month" prefWidth="117.0" text="Month" />
+            <TableColumn fx:id="col_kingdom" prefWidth="117.0" text="Kingdom" />
+            <TableColumn fx:id="col_quantity" prefWidth="117.0" text="Quantity" />
+        </columns>
+        <GridPane.margin>
+            <Insets />
+        </GridPane.margin>
+    </TableView>
+</GridPane>

@@ -101,73 +101,33 @@ public class DBController {
         System.out.println("Survey table updated");
         System.out.println("**Survey update complete**");
     }
-//
-//    private static Boolean checkObservationOverlap(ZonedDateTime startZDT, ZonedDateTime endZDT) throws SQLException {
-//        ObservableList<Observation> allObservations = DBController.getObservations();
-//
-//        Timestamp startTS = Timestamp.valueOf(startZDT.toLocalDateTime());
-//        Timestamp endTS = Timestamp.valueOf(endZDT.toLocalDateTime());
-//
-//        for(Observation observation:allObservations){
-//            ZonedDateTime tempStartZDT = observation.getStart().toInstant().atZone(ZoneId.of("UTC"));
-//            ZonedDateTime tempEndZDT = observation.getEnd().toInstant().atZone(ZoneId.of("UTC"));
-//            Timestamp thisStart = Timestamp.valueOf(tempStartZDT.toLocalDateTime());
-//            Timestamp thisEnd = Timestamp.valueOf(tempEndZDT.toLocalDateTime());
-//
-//            System.out.println(startTS + " - " + thisStart);
-//
-//            if(endTS.after(thisStart) && endTS.before(thisEnd)){
-//                return true;
-//            }else if(startTS.after(thisStart) && endTS.before(thisEnd)){
-//                return true;
-//            }else if(startTS.before(thisEnd) && endTS.after(thisEnd)){
-//                return true;
-//            }else if(startTS.equals(thisStart)){
-//                return true;
-//            }else if(endTS.equals(thisEnd)){
-//                return true;
-//            }
-//        }
-//        return false;
-//    }
-//
+
     public static Integer addObservation(Observation observation) throws SQLException {
         System.out.println(observation.getDate());
         Timestamp dateTS = Timestamp.valueOf(observation.getDate().toLocalDateTime());
 
-        //if (!checkObservationOverlap(observation.getStart(), observation.getEnd())) {
-            //System.out.println(checkObservationOverlap(observation.getStart(), observation.getEnd()));
-            Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
-            PreparedStatement ps = conn.prepareStatement("" +
-                    "INSERT INTO observation (" +
-                    "survey_id, common_name, binomial_name, location, kingdom, observation_date, createDate, createdBy, lastUpdate, lastUpdateBy" +
-                    ") " +
-                    "VALUES (?, ?, ?, ?, ?, ?, UTC_TIMESTAMP(), ?, UTC_TIMESTAMP(), ?)" // wow, there must be a better way to do these prepared statements...
-            );
+        Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
+        PreparedStatement ps = conn.prepareStatement("" +
+                "INSERT INTO observation (" +
+                "survey_id, common_name, binomial_name, location, kingdom, observation_date, createDate, createdBy, lastUpdate, lastUpdateBy" +
+                ") " +
+                "VALUES (?, ?, ?, ?, ?, ?, UTC_TIMESTAMP(), ?, UTC_TIMESTAMP(), ?)" // wow, there must be a better way to do these prepared statements...
+        );
 
-            ps.setInt(1, observation.getSurveyId());
-            ps.setString(2, observation.getCommon());
-            ps.setString(3, observation.getBinomial());
-            ps.setString(4, observation.getLocation());
-            ps.setString(5, observation.getKingdom());
-            ps.setTimestamp(6, dateTS);
-            ps.setInt(7, LoginScreenController.getCurrUserId());
-            ps.setInt(8, LoginScreenController.getCurrUserId());
-            ps.executeUpdate();
+        ps.setInt(1, observation.getSurveyId());
+        ps.setString(2, observation.getCommon());
+        ps.setString(3, observation.getBinomial());
+        ps.setString(4, observation.getLocation());
+        ps.setString(5, observation.getKingdom());
+        ps.setTimestamp(6, dateTS);
+        ps.setInt(7, LoginScreenController.getCurrUserId());
+        ps.setInt(8, LoginScreenController.getCurrUserId());
+        ps.executeUpdate();
 
-            return 1;
-//        } else {
-//            System.out.println("Overlapping observation");
-//            Alert emptyFields = new Alert(Alert.AlertType.ERROR);
-//            emptyFields.setTitle("Error");
-//            emptyFields.setHeaderText("Overlapping Observation");
-//            emptyFields.setContentText("Please check the observation list and try again.");
-//            emptyFields.showAndWait();
-//        }
-//        return 0;
+        return 1;
     }
 
-    public static ObservableList<Observation> getObservations() throws SQLException {
+    public static ObservableList<Observation> getObservations() throws SQLException { // all observations
         ObservableList<Observation> allObservations = FXCollections.observableArrayList();
 
         Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
@@ -199,37 +159,58 @@ public class DBController {
         return allObservations;
     }
 
+    public static ObservableList<Observation> getObservations(String term) throws SQLException { // observations by search term
+        ObservableList<Observation> allObservations = FXCollections.observableArrayList();
+
+        Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
+        PreparedStatement ps = conn.prepareStatement("SELECT * FROM observation WHERE common_name LIKE ? OR binomial_name LIKE ? ORDER BY observation_date");
+        ps.setString(1, "%" + term + "%");
+        ps.setString(2, "%" + term + "%");
+        ResultSet rs = ps.executeQuery();
+
+        while (rs.next()) {
+            Observation observation = new Observation();
+            observation.setObservationId(Integer.parseInt(rs.getString(1)));
+            observation.setSurveyId(Integer.parseInt(rs.getString(2)));
+            observation.setKingdom(rs.getString(3));
+            observation.setBinomial(rs.getString(4));
+            observation.setCommon(rs.getString(5));
+            observation.setLocation(rs.getString(6));
+            Timestamp startTS = rs.getTimestamp(7);
+            observation.setUserId(Integer.parseInt(rs.getString(9)));
+
+            LocalDateTime startLDT = startTS.toLocalDateTime();
+            ZonedDateTime startUTC = startLDT.atZone(ZoneId.of("UTC"));
+            ZonedDateTime startZDT = startUTC.withZoneSameInstant(ZoneId.systemDefault());
+
+            observation.setDate(startZDT);
+
+            allObservations.add(observation);
+        }
+        rs.close();
+
+        return allObservations;
+    }
+
     public static int updateObservation(Observation observation) throws SQLException {
         Timestamp dateTS = Timestamp.valueOf(observation.getDate().toLocalDateTime());
-//        Timestamp endTS = Timestamp.valueOf(observation.getEnd().toLocalDateTime());
-        System.out.println(observation.getObservationId());
-        //if (!checkObservationOverlap(observation.getStart(), observation.getEnd())) {
-            //System.out.println(checkObservationOverlap(observation.getStart(), observation.getEnd()));
-            Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
-            PreparedStatement ps = conn.prepareStatement("UPDATE observation SET survey_id = ?, common_name = ?, binomial_name = ?, location = ?, kingdom = ?, observation_date = ?, lastUpdate = UTC_TIMESTAMP(), lastUpdateBy = ? WHERE observation_id = ?");
-            ps.setInt(1, observation.getSurveyId());
-            ps.setString(2, observation.getCommon());
-            ps.setString(3, observation.getBinomial());
-            ps.setString(4, observation.getLocation());
-            ps.setString(5, observation.getKingdom());
-            ps.setTimestamp(6, dateTS);
-            ps.setInt(7, LoginScreenController.getCurrUserId());
-            ps.setInt(8, observation.getObservationId());
 
-            ps.executeUpdate();
+        Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
+        PreparedStatement ps = conn.prepareStatement("UPDATE observation SET survey_id = ?, common_name = ?, binomial_name = ?, location = ?, kingdom = ?, observation_date = ?, lastUpdate = UTC_TIMESTAMP(), lastUpdateBy = ? WHERE observation_id = ?");
+        ps.setInt(1, observation.getSurveyId());
+        ps.setString(2, observation.getCommon());
+        ps.setString(3, observation.getBinomial());
+        ps.setString(4, observation.getLocation());
+        ps.setString(5, observation.getKingdom());
+        ps.setTimestamp(6, dateTS);
+        ps.setInt(7, LoginScreenController.getCurrUserId());
+        ps.setInt(8, observation.getObservationId());
 
-            System.out.println("**Observation update complete**");
+        ps.executeUpdate();
 
-            return 1;
-//        } else {
-//            System.out.println("Overlapping observation");
-//            Alert emptyFields = new Alert(Alert.AlertType.ERROR);
-//            emptyFields.setTitle("Error");
-//            emptyFields.setHeaderText("Overlapping Observation");
-//            emptyFields.setContentText("Please check the observation list and try again.");
-//            emptyFields.showAndWait();
-//        }
-//        return 0;
+        System.out.println("**Observation update complete**");
+
+        return 1;
     }
 
     public static void deleteObservation(Observation observation) throws SQLException {
@@ -238,123 +219,26 @@ public class DBController {
         ps.setInt(1, observation.getObservationId());
         ps.executeUpdate();
     }
-//
-//    public static ObservableList<ReportItem> getObservationsByType() throws SQLException {
-//        ObservableList<ReportItem> allObservations = FXCollections.observableArrayList();
-//
-//        Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
-//        PreparedStatement ps = conn.prepareStatement("SELECT MONTHNAME(start) AS 'month', type, COUNT(*) AS 'quantity' FROM observation GROUP BY type, MONTH(start)");
-//
-//        ResultSet rs = ps.executeQuery();
-//
-//        while (rs.next()) {
-//            ReportItem item = new ReportItem();
-//
-//            item.setMonth(rs.getString(1));
-//            item.setType(rs.getString(2));
-//            item.setQuantity(Integer.parseInt(rs.getString(3)));
-//
-//            allObservations.add(item);
-//        }
-//        rs.close();
-//
-//        return allObservations;
-//    }
-//
-//    public static ObservableList<ReportItem> getConsultantSchedules() throws SQLException {
-//        ObservableList<ReportItem> consultantSchedules = FXCollections.observableArrayList();
-//
-//        Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
-//        PreparedStatement ps = conn.prepareStatement("SELECT user.userName AS 'consultant', survey.title AS 'survey', observation.type, observation.start FROM survey JOIN observation ON survey.surveyId = observation.surveyId JOIN user ON observation.userId = user.userId ORDER BY user.userId, observation.start");
-//
-//        ResultSet rs = ps.executeQuery();
-//
-//        while (rs.next()) {
-//            ReportItem item = new ReportItem();
-//
-//            item.setUserName(rs.getString(1));
-//            item.setTitle(rs.getString(2));
-//            item.setType(rs.getString(3));
-//
-//            Timestamp startTS = rs.getTimestamp(4);
-//            LocalDateTime startLDT = startTS.toLocalDateTime();
-//            ZonedDateTime startUTC = startLDT.atZone(ZoneId.of("UTC"));
-//            ZonedDateTime startZDT = startUTC.withZoneSameInstant(ZoneId.systemDefault());
-//
-//            item.setDateTime(startZDT);
-//
-//            consultantSchedules.add(item);
-//        }
-//        rs.close();
-//
-//        return consultantSchedules;
-//    }
-//
-//    public static ObservableList<ReportItem> getSurveysPerCity() throws SQLException {
-//        ObservableList<ReportItem> surveysPerCity = FXCollections.observableArrayList();
-//
-//        Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
-//        PreparedStatement ps = conn.prepareStatement("SELECT ci.city, co.country, COUNT(DISTINCT cu.title) AS surveyCount FROM country co JOIN city ci ON co.countryId = ci.countryId LEFT JOIN address a ON ci.cityId = a.cityId LEFT JOIN survey cu ON a.addressId = cu.addressId GROUP BY city");
-//
-//        ResultSet rs = ps.executeQuery();
-//
-//        while (rs.next()) {
-//            ReportItem item = new ReportItem();
-//
-//            item.setCity(rs.getString(1));
-//            item.setCountry(rs.getString(2));
-//            item.setQuantity(Integer.parseInt(rs.getString(3)));
-//
-//            surveysPerCity.add(item);
-//        }
-//        rs.close();
-//
-//        return surveysPerCity;
-//    }
-//
-//    public static Observation checkUpcomingObservations() throws SQLException {
-//        Observation observation = new Observation();
-//        Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
-//
-//        LocalDateTime nowLDT = LocalDateTime.now();
-//        ZonedDateTime nowZDT = nowLDT.atZone(ZoneId.systemDefault());
-//        LocalDateTime startLDT = nowZDT.withZoneSameInstant(ZoneId.of("UTC")).toLocalDateTime();
-//        LocalDateTime startLDT15 = startLDT.plusMinutes(15);
-//
-//        PreparedStatement ps = conn.prepareStatement("SELECT * FROM observation WHERE userId = ? AND (start BETWEEN ? AND ?) ORDER BY start LIMIT 1");
-//        ps.setInt(1, LoginScreenController.getCurrUserId());
-//        ps.setString(2, String.valueOf(startLDT));
-//        ps.setString(3, String.valueOf(startLDT15));
-//
-//        ResultSet rs = ps.executeQuery();
-//
-//        while (rs.next()) {
-//            observation.setObservationId(Integer.parseInt(rs.getString(1)));
-//            observation.setSurveyId(Integer.parseInt(rs.getString(2)));
-//            observation.setUserId(Integer.parseInt(rs.getString(3)));
-//            observation.setTitle(rs.getString(4));
-//            observation.setDescription(rs.getString(5));
-//            observation.setLocation(rs.getString(6));
-//            observation.setContact(rs.getString(7));
-//            observation.setType(rs.getString(8));
-//            observation.setUrl(rs.getString(9));
-//
-//            Timestamp startTS = rs.getTimestamp(10);
-//            LocalDateTime startLDT2 = startTS.toLocalDateTime();
-//            ZonedDateTime startUTC = startLDT2.atZone(ZoneId.of("UTC"));
-//            ZonedDateTime startZDT = startUTC.withZoneSameInstant(ZoneId.systemDefault());
-//
-//            Timestamp endTS = rs.getTimestamp(11);
-//            LocalDateTime endLDT = endTS.toLocalDateTime();
-//            ZonedDateTime endUTC = endLDT.atZone(ZoneId.of("UTC"));
-//            ZonedDateTime endZDT = endUTC.withZoneSameInstant(ZoneId.systemDefault());
-//
-//            observation.setStart(startZDT);
-//            observation.setEnd(endZDT);
-//        }
-//
-//        rs.close();
-//
-//        return observation;
-//    }
+
+    public static ObservableList<ReportItem> getObservationsByKingdom() throws SQLException {
+        ObservableList<ReportItem> allObservations = FXCollections.observableArrayList();
+
+        Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
+        PreparedStatement ps = conn.prepareStatement("SELECT MONTHNAME(observation_date) AS 'month', kingdom, COUNT(*) AS 'quantity' FROM observation GROUP BY kingdom, MONTHNAME(observation_date)");
+
+        ResultSet rs = ps.executeQuery();
+
+        while (rs.next()) {
+            ReportItem item = new ReportItem();
+
+            item.setMonth(rs.getString(1));
+            item.setKingdom(rs.getString(2));
+            item.setQuantity(Integer.parseInt(rs.getString(3)));
+
+            allObservations.add(item);
+        }
+        rs.close();
+
+        return allObservations;
+    }
 }

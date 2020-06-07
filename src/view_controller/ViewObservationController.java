@@ -1,5 +1,6 @@
 package view_controller;
 
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -33,6 +34,7 @@ public class ViewObservationController implements Initializable {
     @FXML private TableColumn<Observation, String> col_location;
     @FXML private TableColumn<Observation, ZonedDateTime> col_date;
     @FXML private ChoiceBox dropdown_filter;
+    @FXML private TextField input_search;
 
     private ObservableList<Observation> allObservations;
     private static Observation observationToModify;
@@ -97,7 +99,29 @@ public class ViewObservationController implements Initializable {
     }
 
     @FXML
-    private void filterChoiceHandler() {
+    public void searchObservations(ActionEvent event) throws IOException, SQLException {
+        String searchTerm = input_search.getText().toLowerCase();
+
+        if(DBController.getObservations(searchTerm).size() <= 0){
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Error");
+            alert.setHeaderText("\"" + searchTerm + "\" " + "Not Found");
+            alert.setContentText("Search does not match any common or binomial names.");
+            alert.showAndWait();
+        } else {
+            // populate observations table
+            col_survey_id.setCellValueFactory(new PropertyValueFactory<>("surveyId"));
+            col_common.setCellValueFactory(new PropertyValueFactory<>("common"));
+            col_binomial.setCellValueFactory(new PropertyValueFactory<>("binomial"));
+            col_location.setCellValueFactory(new PropertyValueFactory<>("location"));
+            col_date.setCellValueFactory(new PropertyValueFactory<>("date"));
+            table_observations.refresh();
+            table_observations.setItems(allObservations);
+        }
+    }
+
+//    @FXML
+//    private void filterChoiceHandler() {
 //        ZonedDateTime minDate;
 //        ZonedDateTime maxDate;
 //        ZonedDateTime now = ZonedDateTime.now();
@@ -139,5 +163,5 @@ public class ViewObservationController implements Initializable {
 //        col_start.setCellValueFactory(new PropertyValueFactory<>("start"));
 //        table_observations.refresh();
 //        table_observations.setItems(observations);
-    }
+//    }
 }
