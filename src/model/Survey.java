@@ -47,7 +47,7 @@ public class Survey {
             error = error + "Name is required. \n";
         }
         if (description.length() == 0) {
-            error = error + "Description 1 is required. \n";
+            error = error + "Description is required. \n";
         }
         
         return error;
