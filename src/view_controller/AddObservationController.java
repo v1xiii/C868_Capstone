@@ -30,7 +30,7 @@ public class AddObservationController implements Initializable {
     @FXML private TextField input_common;
     @FXML private TextField input_binomial;
     @FXML private TextField input_location;
-    @FXML private ChoiceBox dropdown_kingdom;
+    @FXML private ChoiceBox<String> dropdown_kingdom;
     @FXML private DatePicker datepicker_date;
 
     public void initialize(URL url, ResourceBundle rb) {
@@ -43,15 +43,6 @@ public class AddObservationController implements Initializable {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
-        // this lambda goes through all the dates on the datepicker and disables dates prior to today and also weekends
-        datepicker_date.setDayCellFactory(picker -> new DateCell() {
-            public void updateItem(LocalDate date, boolean empty) {
-            super.updateItem(date, empty);
-            LocalDate today = LocalDate.now();
-            setDisable(empty || date.compareTo(today) < 0);
-            }
-        });
     }
 
     @FXML
@@ -69,7 +60,7 @@ public class AddObservationController implements Initializable {
         String common = input_common.getText();
         String binomial = input_binomial.getText();
         String location = input_location.getText();
-        String kingdom = dropdown_kingdom.getValue().toString();
+        String kingdom = dropdown_kingdom.getValue();
         LocalDate date = datepicker_date.getValue();
 
         DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd h:mm a");

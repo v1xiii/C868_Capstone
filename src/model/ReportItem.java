@@ -1,7 +1,5 @@
 package model;
 
-import java.time.ZonedDateTime;
-
 public class ReportItem {
 
     private String month;

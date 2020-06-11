@@ -22,9 +22,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 import java.util.TimeZone;
 
-import static java.time.DayOfWeek.SATURDAY;
-import static java.time.DayOfWeek.SUNDAY;
-
 public class EditObservationController implements Initializable {
     public Button button_cancel;
     public Button button_save;
@@ -53,16 +50,6 @@ public class EditObservationController implements Initializable {
         input_binomial.setText(observation.getBinomial());
         input_location.setText(observation.getLocation());
         dropdown_kingdom.setValue(observation.getKingdom());
-
-        // this lambda goes through all the dates on the datepicker and disables dates prior to today and also weekends
-        datepicker_date.setDayCellFactory(picker -> new DateCell() {
-            public void updateItem(LocalDate date, boolean empty) {
-            super.updateItem(date, empty);
-            LocalDate today = LocalDate.now();
-            DayOfWeek dayOfWeek = date.getDayOfWeek();
-            setDisable(empty || date.compareTo(today) < 0 || dayOfWeek == SATURDAY || dayOfWeek == SUNDAY);
-            }
-        });
 
         // set the datepicker value
         LocalDate date = observation.getDate().toLocalDate();
