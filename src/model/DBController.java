@@ -168,6 +168,7 @@ public class DBController {
         ResultSet rs = ps.executeQuery();
 
         while (rs.next()) {
+            System.out.println(rs.getString(5));
             Observation observation = new Observation();
             observation.setObservationId(Integer.parseInt(rs.getString(1)));
             observation.setSurveyId(Integer.parseInt(rs.getString(2)));

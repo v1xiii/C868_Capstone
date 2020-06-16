@@ -28,7 +28,7 @@ public class MainScreenController implements Initializable {
 
     @FXML
     private void logoutButtonHandler(ActionEvent event) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("LoginScreen.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("../C868_Capstone/res/LoginScreen.fxml"));
         Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
         stage.setTitle("SODA Login");
         stage.setScene(new Scene(root, 550, 500));

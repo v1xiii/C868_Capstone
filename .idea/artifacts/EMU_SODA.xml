@@ -1,0 +1,21 @@
+<component name="ArtifactManager">
+  <artifact type="javafx" build-on-make="true" name="EMU_SODA">
+    <output-path>$PROJECT_DIR$/out/artifacts/EMU_SODA</output-path>
+    <properties id="javafx-properties">
+      <options>
+        <option name="appClass" value="C868_Capstone.Main" />
+        <option name="description" value="" />
+        <option name="htmlPlaceholderId" value="" />
+        <option name="title" value="" />
+        <option name="vendor" value="" />
+        <option name="version" value="" />
+      </options>
+    </properties>
+    <root id="root">
+      <element id="archive" name="C868_Capstone.jar">
+        <element id="module-output" name="C868_Capstone" />
+      </element>
+      <element id="library" level="project" name="mysql-connector-java-5.1.47" />
+    </root>
+  </artifact>
+</component>

@@ -101,8 +101,9 @@ public class ViewObservationController implements Initializable {
     @FXML
     public void searchObservations(ActionEvent event) throws SQLException {
         String searchTerm = input_search.getText().toLowerCase();
+        ObservableList<Observation> observations = DBController.getObservations(searchTerm);
 
-        if(DBController.getObservations(searchTerm).size() <= 0){
+        if(observations.size() <= 0){
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Error");
             alert.setHeaderText("\"" + searchTerm + "\" " + "Not Found");
@@ -116,7 +117,7 @@ public class ViewObservationController implements Initializable {
             col_location.setCellValueFactory(new PropertyValueFactory<>("location"));
             col_date.setCellValueFactory(new PropertyValueFactory<>("date"));
             table_observations.refresh();
-            table_observations.setItems(allObservations);
+            table_observations.setItems(observations);
         }
     }
 
